@@ -1,4 +1,5 @@
-﻿using Core.DTOs;
+﻿using BookingTablesAPI.Filters;
+using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,12 +17,14 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet]
+        
         public IActionResult GetUsers()
         {
             List<UserDTO> userDTOs = _userService.GetUsers();
             return Ok(userDTOs);
         }
         [HttpGet("{id}",Name ="UserById")]
+        [ValidationFilter]
         public async Task<IActionResult> GetUserById(int id)
         {
             UserDTO userDTO = await _userService.GetUserById(id);
@@ -33,6 +36,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
+        [ValidationFilter]
         public async Task<IActionResult> CreateUser(UserForCreationDTO userForCreationDTO)
         {
             UserDTO userDTO = await _userService.CreateUser(userForCreationDTO);
@@ -40,6 +44,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ValidationFilter]
         public async Task<IActionResult> UpdateUser(int id , UserForUpdatingDTO userForUpdatingDTO)
         {
             bool isSuccess = await _userService.UpdateUser(id,userForUpdatingDTO);
@@ -47,6 +52,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ValidationFilter]
         public async Task<IActionResult> DeleteUser(int id)
         {
            bool isSuccess = await _userService.DeleteUser(id);

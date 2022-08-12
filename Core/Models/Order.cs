@@ -12,6 +12,7 @@ namespace Core.Models
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public Table Table { get; set; }
+        public int TableId { get; set; }
         public int CountOfPeople { get; set; }
         public DateTime DateOfReservation { get; set; }
 

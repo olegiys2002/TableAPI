@@ -1,4 +1,5 @@
-﻿using Core.DTOs;
+﻿using BookingTablesAPI.Filters;
+using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,15 +8,16 @@ namespace BookingTablesAPI.Controllers
 {
     [Route("api/tables")]
     [ApiController]
-    public class TablesController : ControllerBase
+    public class TableController : ControllerBase
     {
         private readonly ITableService _tableService;
-        public TablesController(ITableService tableService)
+        public TableController(ITableService tableService)
         {
             _tableService = tableService;
         }
 
         [HttpGet("{id}",Name ="tableById")]
+        [ValidationFilter]
         public async Task<IActionResult> GetTable(int id)
         {
             TableDTO tableDTO = await _tableService.GetTableById(id);
@@ -34,6 +36,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
+        [ValidationFilter]
         public async Task<IActionResult> CreateTable(TableForCreationDTO tableForCreationDTO)
         {
             TableDTO tableDTO = await _tableService.CreateTable(tableForCreationDTO);
@@ -42,6 +45,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ValidationFilter]
         public async Task<IActionResult> UpdateTable(int id, TableForUpdatingDTO tableForUpdatingDTO)
         {
             bool isSuccess = await _tableService.UpdateTable(id, tableForUpdatingDTO);
@@ -49,6 +53,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ValidationFilter]
         public async Task<IActionResult> DeleteTable(int id)
         {
             bool isSuccess = await _tableService.DeleteTable(id);
