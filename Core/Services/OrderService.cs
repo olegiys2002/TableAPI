@@ -23,7 +23,8 @@ namespace Core.Services
         {
             Order order = _mapper.ToDomainModel(orderForCreationDTO);
             Table table = await _unitOfWork.TableRepository.GetTable(orderForCreationDTO.TableId);
-            if (table == null)
+            
+            if (table == null || order.CountOfPeople>table.CountOfSeats)
             {
                 return null;
             }
@@ -72,10 +73,11 @@ namespace Core.Services
             Order order = await _unitOfWork.OrderRepository.GetOrder(id);
             Table table = await _unitOfWork.TableRepository.GetTable(orderForUpdatingDTO.TableId);
 
-            if (order == null || table == null)
+            if (order == null || table == null|| table.CountOfSeats < order.CountOfPeople)
             {
                 return false;
             }
+
             order.CountOfPeople = orderForUpdatingDTO.CountOfPeople;
             order.DateOfReservation = orderForUpdatingDTO.DateOfReservation;
             order.Table = table;
