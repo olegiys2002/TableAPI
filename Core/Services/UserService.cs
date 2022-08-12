@@ -48,6 +48,10 @@ namespace Core.Services
         public async Task<UserDTO> GetUserById(int id)
         {
             User user = await _unitOfWork.UserRepository.GetUser(id);
+            if (user == null)
+            {
+                return null;
+            }
             UserDTO userDTO = _mapper.ToDTO(user);
 
             return userDTO;

@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
 
         public async Task<User> GetUser(int id)
         {
-           return await _applicationContext.Users.SingleAsync(user => user.Id == id);
+           return await _applicationContext.Users.FirstOrDefaultAsync(user=>user.Id == id);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace Core.IServices.IRepositories
 {
     public interface IOrderRepository : IRepositoryBase<Order>
     {
+        Task<Order> GetOrder(int id);
     }
 }

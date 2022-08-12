@@ -19,7 +19,7 @@ namespace Infrastructure.Repositories
 
         public async Task<Table> GetTable(int id)
         {
-           return await _applicationContext.Tables.SingleAsync(table => table.Id == id);
+           return await _applicationContext.Tables.FirstOrDefaultAsync(table=>table.Id == id);
         }
     }
 }

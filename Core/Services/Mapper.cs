@@ -31,6 +31,17 @@ namespace Core.Services
             };
             return table;
         }
+
+        public Order ToDomainModel(OrderForCreationDTO orderForCreationDTO)
+        {
+            Order order = new Order()
+            {
+                CountOfPeople = orderForCreationDTO.CountOfPeople,
+                DateOfReservation = orderForCreationDTO.DateOfReservation
+            };
+            return order;
+        }
+
         public TableDTO ToDTO(Table table)
         {
             TableDTO tableDTO = new TableDTO()
@@ -57,6 +68,21 @@ namespace Core.Services
             return userDTO;
         }
 
+        public OrderDTO ToDTO(Order order)
+        {
+            TableDTO tableDTO = ToDTO(order.Table);
+            OrderDTO orderDTO = new OrderDTO()
+            {
+                Id = order.Id,
+                CountOfPeople = order.CountOfPeople,
+                CreatedAt = order.CreatedAt,
+                DateOfReservation = order.DateOfReservation,
+                UpdatedAt = order.UpdatedAt,
+                TableDTO = tableDTO
+            };
+            return orderDTO;
+        }
+
         public List<UserDTO> ToListDTO(List<User> users)
         {
             List<UserDTO> userDTOs = new();
@@ -78,6 +104,17 @@ namespace Core.Services
                 tableDTOs.Add(tableDTO);
             }
             return tableDTOs;
+        }
+
+        public List<OrderDTO> ToListDTO(List<Order> orders)
+        {
+            List<OrderDTO> orderDTOs = new List<OrderDTO>();
+            foreach(var order in orders)
+            {
+                OrderDTO orderDTO = ToDTO(order);
+                orderDTOs.Add(orderDTO);
+            }
+            return orderDTOs;
         }
     }
 }

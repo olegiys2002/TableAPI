@@ -49,6 +49,10 @@ namespace Core.Services
         public async Task<TableDTO> GetTableById(int id)
         {
             Table table = await _unitOfWork.TableRepository.GetTable(id);
+            if (table == null)
+            {
+                return null;
+            }
             TableDTO tableDTO = _mapper.ToDTO(table);
 
             return tableDTO;

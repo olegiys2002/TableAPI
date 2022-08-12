@@ -12,10 +12,12 @@ namespace Core.IServices
     {
         UserDTO ToDTO(User user);
         TableDTO ToDTO(Table table);
+        OrderDTO ToDTO(Order order);
         User ToDomainModel(UserForCreationDTO userForCreationDTO);
         Table ToDomainModel(TableForCreationDTO tableForCreationDTO);
+        Order ToDomainModel(OrderForCreationDTO orderForCreationDTO);
         List<UserDTO> ToListDTO(List<User> users);
         List<TableDTO> ToListDTO(List<Table> tables);
-
+        List<OrderDTO> ToListDTO(List<Order> orders);
     }
 }
