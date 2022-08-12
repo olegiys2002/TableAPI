@@ -1,6 +1,8 @@
-﻿using Core.DTOs;
+﻿using AutoMapper;
+using Core.DTOs;
 using Core.IServices;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,16 +20,14 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<TableDTO> CreateTable(TableForCreationDTO tableForCreationDTO)
+        public async Task<TableDTO> CreateTable(TableFormDTO tableForCreationDTO)
         {
-            Table table = _mapper.ToDomainModel(tableForCreationDTO);
-            table.CreatedAt = DateTime.Now;
-            table.UpdatedAt = null;
+            Table table = _mapper.Map<Table>(tableForCreationDTO);
 
             _unitOfWork.TableRepository.Create(table);
             await _unitOfWork.SaveChangesAsync();
 
-            TableDTO tableDTO = _mapper.ToDTO(table);
+            TableDTO tableDTO = _mapper.Map<TableDTO>(table);
             return tableDTO;
         }
 
@@ -53,20 +53,19 @@ namespace Core.Services
             {
                 return null;
             }
-            TableDTO tableDTO = _mapper.ToDTO(table);
+            TableDTO tableDTO = _mapper.Map<TableDTO>(table);
 
             return tableDTO;
         }
 
-        public List<TableDTO> GetTables()
+        public async Task<List<TableDTO>> GetTables()
         {
-            List<Table> tables = _unitOfWork.TableRepository.FindAll(false).ToList();
-            List<TableDTO> tablesDTOs = _mapper.ToListDTO(tables);
-
+            List<Table> tables = await _unitOfWork.TableRepository.FindAll(false).ToListAsync();
+            List<TableDTO> tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
             return tablesDTOs;
         }
 
-        public async Task<bool> UpdateTable(int id ,TableForUpdatingDTO tableForUpdateDTO)
+        public async Task<bool> UpdateTable(int id ,TableFormDTO tableForUpdateDTO)
         {
             Table table = await _unitOfWork.TableRepository.GetTable(id);
 
@@ -77,7 +76,7 @@ namespace Core.Services
 
             table.CountOfSeats = tableForUpdateDTO.CountOfSeats;
             table.Number = tableForUpdateDTO.Number;
-            table.UpdatedAt = DateTime.Now;
+        
 
             await _unitOfWork.SaveChangesAsync();
 

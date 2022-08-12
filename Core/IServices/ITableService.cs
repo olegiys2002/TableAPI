@@ -9,9 +9,9 @@ namespace Core.IServices
 {
     public interface ITableService
     {
-        List<TableDTO> GetTables();
-        Task<TableDTO> CreateTable(TableForCreationDTO tableForCreationDTO);
-        Task<bool> UpdateTable(int id ,TableForUpdatingDTO tableForUpdateDTO);
+        Task<List<TableDTO>> GetTables();
+        Task<TableDTO> CreateTable(TableFormDTO tableForCreationDTO);
+        Task<bool> UpdateTable(int id ,TableFormDTO tableForUpdateDTO);
         Task<bool> DeleteTable(int id);
         Task<TableDTO> GetTableById(int id);
 

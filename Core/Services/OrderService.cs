@@ -1,6 +1,8 @@
-﻿using Core.DTOs;
+﻿using AutoMapper;
+using Core.DTOs;
 using Core.IServices;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +21,9 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
        
         }
-        public async Task<OrderDTO> CreateOrder(OrderForCreationDTO orderForCreationDTO)
+        public async Task<OrderDTO> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
-            Order order = _mapper.ToDomainModel(orderForCreationDTO);
+            Order order = _mapper.Map<Order>(orderForCreationDTO);
             Table table = await _unitOfWork.TableRepository.GetTable(orderForCreationDTO.TableId);
             
             if (table == null || order.CountOfPeople>table.CountOfSeats)
@@ -29,11 +31,11 @@ namespace Core.Services
                 return null;
             }
             order.Table = table;
-            order.CreatedAt = DateTime.Now;
+     
 
             _unitOfWork.OrderRepository.Create(order);
             await _unitOfWork.SaveChangesAsync();
-            OrderDTO orderDTO = _mapper.ToDTO(order);
+            OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
             return orderDTO;
             
         }
@@ -57,18 +59,18 @@ namespace Core.Services
             {
                 return null;
             }
-            OrderDTO orderDTO = _mapper.ToDTO(order);
+            OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
             return orderDTO;
         }
 
-        public List<OrderDTO> GetOrders()
+        public async Task<List<OrderDTO>> GetOrders()
         {
-            List<Order> orders = _unitOfWork.OrderRepository.FindAll(false).ToList();
-            List<OrderDTO> orderDTOs = _mapper.ToListDTO(orders);
+            List<Order> orders = await _unitOfWork.OrderRepository.FindAll(false).ToListAsync();
+            List<OrderDTO> orderDTOs = _mapper.Map<List<OrderDTO>>(orders);
             return orderDTOs;
         }
 
-        public async Task<bool> UpdateOrder(int id, OrderForUpdatingDTO orderForUpdatingDTO)
+        public async Task<bool> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
             Order order = await _unitOfWork.OrderRepository.GetOrder(id);
             Table table = await _unitOfWork.TableRepository.GetTable(orderForUpdatingDTO.TableId);
@@ -81,7 +83,7 @@ namespace Core.Services
             order.CountOfPeople = orderForUpdatingDTO.CountOfPeople;
             order.DateOfReservation = orderForUpdatingDTO.DateOfReservation;
             order.Table = table;
-            order.UpdatedAt = DateTime.Now;
+          
 
             await _unitOfWork.SaveChangesAsync();
             return true;

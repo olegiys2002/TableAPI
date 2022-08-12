@@ -1,6 +1,8 @@
-﻿using Core.DTOs;
+﻿using AutoMapper;
+using Core.DTOs;
 using Core.IServices;
 using Core.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,15 +20,15 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<UserDTO> CreateUser(UserForCreationDTO userForCreationDTO)
+        public async Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO)
         {
-            User user = _mapper.ToDomainModel(userForCreationDTO);
-            user.CreatedAt = DateTime.Now;
+            User user = _mapper.Map<User>(userForCreationDTO);
+          
           
             _unitOfWork.UserRepository.Create(user);
             await _unitOfWork.SaveChangesAsync();
 
-            UserDTO userDTO = _mapper.ToDTO(user);
+            UserDTO userDTO = _mapper.Map<UserDTO>(user);
 
             return userDTO;
             
@@ -52,20 +54,20 @@ namespace Core.Services
             {
                 return null;
             }
-            UserDTO userDTO = _mapper.ToDTO(user);
+            UserDTO userDTO = _mapper.Map<UserDTO>(user);
 
             return userDTO;
         }
 
-        public List<UserDTO> GetUsers()
+        public async Task<List<UserDTO>> GetUsers()
         {
-            List<User> users = _unitOfWork.UserRepository.FindAll(false).ToList();
-            List<UserDTO> userDTOs = _mapper.ToListDTO(users);
+            List<User> users = await _unitOfWork.UserRepository.FindAll(false).ToListAsync();
+            List<UserDTO> userDTOs = _mapper.Map<List<UserDTO>>(users);
 
             return userDTOs;
         }
 
-        public async Task<bool> UpdateUser(int id,UserForUpdatingDTO userForUpdatingDTO)
+        public async Task<bool> UpdateUser(int id,UserFormDTO userForUpdatingDTO)
         {
             User user = await _unitOfWork.UserRepository.GetUser(id);
 
@@ -76,7 +78,7 @@ namespace Core.Services
 
             user.Name = userForUpdatingDTO.Name;
             user.Role = userForUpdatingDTO.Role;
-            user.UpdatedAt = DateTime.Now;
+         
 
             await _unitOfWork.SaveChangesAsync();
 

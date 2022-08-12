@@ -23,10 +23,7 @@ namespace Infrastructure
         {
             get
             {
-                if (_tableRepository == null)
-                {
-                    _tableRepository = new TableRepository(_applicationContext);
-                }
+               _tableRepository ??= new TableRepository(_applicationContext); 
                 return _tableRepository;
             }
         }
@@ -34,10 +31,7 @@ namespace Infrastructure
         {
             get
             {
-                if (_userRepository == null)
-                {
-                    _userRepository = new UserRepository(_applicationContext);
-                }
+                _userRepository ??= new UserRepository(_applicationContext);
                 return _userRepository;
             }
         }
@@ -46,10 +40,7 @@ namespace Infrastructure
         {
             get
             {
-                if (_orderRepository == null)
-                {
-                    _orderRepository = new OrderRepository(_applicationContext);
-                }
+                _orderRepository ??= new OrderRepository(_applicationContext);
                 return _orderRepository;
             }
         }

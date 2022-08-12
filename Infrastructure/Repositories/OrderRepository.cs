@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class OrderRepository : RepositoryBase<Order>,IOrderRepository
+    public class OrderRepository : EntityRepository<Order>,IOrderRepository
     {
         private readonly ApplicationContext _applicationContext;
         public OrderRepository(ApplicationContext applicationContext) : base(applicationContext)
@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
         {
            return await _applicationContext.Orders.Include(order => order.Table).FirstOrDefaultAsync(order => order.Id == id);
         }
-        public new IQueryable<Order> FindAll(bool trackChanges)
+        public override IQueryable<Order> FindAll(bool trackChanges)
         {
             return !trackChanges ? _applicationContext.Orders.Include(order => order.Table).AsNoTracking()
                                   :_applicationContext.Orders.Include(order => order.Table);

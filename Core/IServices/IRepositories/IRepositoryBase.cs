@@ -12,7 +12,6 @@ namespace Core.IServices.IRepositories
         IQueryable<T> FindAll(bool trackChanges);
         void Delete(T entity);
         void Create(T entity);
-
         void Update(T entity);
 
     }

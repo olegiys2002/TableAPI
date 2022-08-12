@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Core.Models
 {
-    public class Table : Entity
+    public class Entity
     {
-        public int Number { get; set; }
-        public int CountOfSeats { get; set; }
-
+        public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

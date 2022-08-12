@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 
 namespace Core.IServices
 {
-    public interface IMapper
-    {
-        UserDTO ToDTO(User user);
-        TableDTO ToDTO(Table table);
-        OrderDTO ToDTO(Order order);
-        User ToDomainModel(UserForCreationDTO userForCreationDTO);
-        Table ToDomainModel(TableForCreationDTO tableForCreationDTO);
-        Order ToDomainModel(OrderForCreationDTO orderForCreationDTO);
-        List<UserDTO> ToListDTO(List<User> users);
-        List<TableDTO> ToListDTO(List<Table> tables);
-        List<OrderDTO> ToListDTO(List<Order> orders);
-    }
+    //public interface IMapper
+    //{
+    //    UserDTO ToDTO(User user);
+    //    TableDTO ToDTO(Table table);
+    //    OrderDTO ToDTO(Order order);
+    //    User ToDomainModel(UserFormDTO userForCreationDTO);
+    //    Table ToDomainModel(TableFormDTO tableForCreationDTO);
+    //    Order ToDomainModel(OrderFormDTO orderForCreationDTO);
+    //    List<UserDTO> ToListDTO(List<User> users);
+    //    List<TableDTO> ToListDTO(List<Table> tables);
+    //    List<OrderDTO> ToListDTO(List<Order> orders);
+    //}
 }

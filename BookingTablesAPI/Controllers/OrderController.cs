@@ -24,14 +24,14 @@ namespace BookingTablesAPI.Controllers
             return orderDTO == null ? NotFound() : Ok(orderDTO);
         }
         [HttpGet]
-        public IActionResult GetOrders()
+        public async Task<IActionResult> GetOrders()
         {
-            List<OrderDTO> orderDTOs = _orderService.GetOrders();
+            List<OrderDTO> orderDTOs = await _orderService.GetOrders();
             return Ok(orderDTOs);
         }
         [HttpPost]
         [ValidationFilter]
-        public async Task<IActionResult> CreateOrder(OrderForCreationDTO orderForCreationDTO)
+        public async Task<IActionResult> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             OrderDTO orderDTO = await _orderService.CreateOrder(orderForCreationDTO);
             if (orderDTO == null)
@@ -42,7 +42,7 @@ namespace BookingTablesAPI.Controllers
         }
         [HttpPut("{id}")]
         [ValidationFilter]
-        public async Task<IActionResult> UpdateOrder(int id,OrderForUpdatingDTO orderForUpdatingDTO)
+        public async Task<IActionResult> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
             bool isSuccess = await _orderService.UpdateOrder(id, orderForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();

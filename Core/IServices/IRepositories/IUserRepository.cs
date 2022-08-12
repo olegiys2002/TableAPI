@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.IServices.IRepositories
 {
-    public interface IUserRepository : IRepositoryBase<User>
+    public interface IUserRepository : IEntityRepository<User>
     {
        Task<User> GetUser(int id);
     }

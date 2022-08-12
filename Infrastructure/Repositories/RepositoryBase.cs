@@ -11,27 +11,30 @@ namespace Infrastructure
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected ApplicationContext _applicationContext;
+        protected DbSet<T> dataSet;
         public RepositoryBase(ApplicationContext applicationContext)
         {
             _applicationContext = applicationContext;
+            dataSet = _applicationContext.Set<T>();
         }
-        public void Create(T entity)
+        public virtual void Create(T entity)
         {
-            _applicationContext.Set<T>().Add(entity);
+            dataSet.Add(entity);
+        
         }
 
         public void Delete(T entity)
         {
-            _applicationContext.Set<T>().Remove(entity);
+            dataSet.Remove(entity);
         }
 
-        public IQueryable<T> FindAll(bool trackChanges)
+        public virtual IQueryable<T> FindAll(bool trackChanges)
         {
-            return !trackChanges ? _applicationContext.Set<T>().AsNoTracking() : _applicationContext.Set<T>();
+            return !trackChanges ? dataSet.AsNoTracking() : dataSet;
         }
-        public void Update(T entity)
+        public virtual void Update(T entity)
         {
-            throw new NotImplementedException();
+            dataSet.Update(entity);
         }
     }
 }

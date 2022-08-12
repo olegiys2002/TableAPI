@@ -6,6 +6,7 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,6 +20,7 @@ string connectionString = builder.Configuration.GetConnectionString("sqlConnecti
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString,
                                                                 builder => builder.MigrationsAssembly("BookingTablesAPI")));
 
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
@@ -26,7 +28,6 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITableService, TableService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddScoped<IMapper, Mapper>();
 
 var app = builder.Build();
 

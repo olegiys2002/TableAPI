@@ -18,9 +18,9 @@ namespace BookingTablesAPI.Controllers
 
         [HttpGet]
         
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
-            List<UserDTO> userDTOs = _userService.GetUsers();
+            List<UserDTO> userDTOs = await _userService.GetUsers();
             return Ok(userDTOs);
         }
         [HttpGet("{id}",Name ="UserById")]
@@ -37,7 +37,7 @@ namespace BookingTablesAPI.Controllers
 
         [HttpPost]
         [ValidationFilter]
-        public async Task<IActionResult> CreateUser(UserForCreationDTO userForCreationDTO)
+        public async Task<IActionResult> CreateUser(UserFormDTO userForCreationDTO)
         {
             UserDTO userDTO = await _userService.CreateUser(userForCreationDTO);
             return CreatedAtRoute("UserById",new { userDTO.Id },userDTO);
@@ -45,7 +45,7 @@ namespace BookingTablesAPI.Controllers
 
         [HttpPut("{id}")]
         [ValidationFilter]
-        public async Task<IActionResult> UpdateUser(int id , UserForUpdatingDTO userForUpdatingDTO)
+        public async Task<IActionResult> UpdateUser(int id , UserFormDTO userForUpdatingDTO)
         {
             bool isSuccess = await _userService.UpdateUser(id,userForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();

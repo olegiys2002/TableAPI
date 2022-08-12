@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.IServices.IRepositories
 {
-    public interface ITableRepository : IEntityRepository<Table>
+    public interface IEntityRepository<T> : IRepositoryBase<T>
     {
-        Task<Table> GetTable(int id);
     }
 }

@@ -29,15 +29,15 @@ namespace BookingTablesAPI.Controllers
             return Ok(tableDTO);
         }
         [HttpGet]
-        public IActionResult GetTables()
+        public async Task<IActionResult> GetTables()
         {
-            List<TableDTO> tableDTOs = _tableService.GetTables();
+            List<TableDTO> tableDTOs = await _tableService.GetTables();
             return Ok(tableDTOs);
         }
 
         [HttpPost]
         [ValidationFilter]
-        public async Task<IActionResult> CreateTable(TableForCreationDTO tableForCreationDTO)
+        public async Task<IActionResult> CreateTable(TableFormDTO tableForCreationDTO)
         {
             TableDTO tableDTO = await _tableService.CreateTable(tableForCreationDTO);
 
@@ -46,7 +46,7 @@ namespace BookingTablesAPI.Controllers
 
         [HttpPut("{id}")]
         [ValidationFilter]
-        public async Task<IActionResult> UpdateTable(int id, TableForUpdatingDTO tableForUpdatingDTO)
+        public async Task<IActionResult> UpdateTable(int id, TableFormDTO tableForUpdatingDTO)
         {
             bool isSuccess = await _tableService.UpdateTable(id, tableForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();

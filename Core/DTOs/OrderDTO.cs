@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.DTOs
 {
-    public class OrderDTO
+    public class OrderDTO : DTO
     {
-        public int Id { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
+       
         public TableDTO TableDTO { get; set; }
         public int CountOfPeople { get; set; }
         public DateTime DateOfReservation { get; set; }

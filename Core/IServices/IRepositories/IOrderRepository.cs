@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Core.IServices.IRepositories
 {
-    public interface IOrderRepository : IRepositoryBase<Order>
+    public interface IOrderRepository : IEntityRepository<Order>
     {
         Task<Order> GetOrder(int id);
     }

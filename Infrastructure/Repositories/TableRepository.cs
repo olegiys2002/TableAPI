@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class TableRepository : RepositoryBase<Table>,ITableRepository
+    public class TableRepository : EntityRepository<Table> ,ITableRepository
     {
         private readonly ApplicationContext _applicationContext;
         public TableRepository(ApplicationContext applicationContext) : base (applicationContext)

@@ -10,9 +10,9 @@ namespace Core.IServices
     public interface IUserService
     {
         Task<bool> DeleteUser(int id);
-        Task<bool> UpdateUser(int id , UserForUpdatingDTO userForUpdatingDTO);
-        List<UserDTO> GetUsers();
+        Task<bool> UpdateUser(int id , UserFormDTO userForUpdatingDTO);
+        Task<List<UserDTO>> GetUsers();
         Task<UserDTO> GetUserById(int id);
-        Task<UserDTO> CreateUser(UserForCreationDTO userForCreationDTO);
+        Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO);
     }
 }

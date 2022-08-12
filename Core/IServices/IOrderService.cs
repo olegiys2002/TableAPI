@@ -10,9 +10,9 @@ namespace Core.IServices
     public interface IOrderService
     {
         Task<OrderDTO> GetOrder(int id);
-        List<OrderDTO> GetOrders();
-        Task<OrderDTO> CreateOrder(OrderForCreationDTO orderForCreationDTO);
+        Task<List<OrderDTO>> GetOrders();
+        Task<OrderDTO> CreateOrder(OrderFormDTO orderForCreationDTO);
         Task<bool> DeleteOrder(int id);
-        Task<bool> UpdateOrder(int id, OrderForUpdatingDTO orderForUpdatingDTO);
+        Task<bool> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO);
     }
 }

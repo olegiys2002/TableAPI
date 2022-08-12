@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : RepositoryBase<User>,IUserRepository
+    public class UserRepository : EntityRepository<User>,IUserRepository
     {
         private readonly ApplicationContext _applicationContext;
         public UserRepository(ApplicationContext applicationContext) : base(applicationContext)
