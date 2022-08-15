@@ -14,5 +14,11 @@ namespace Core.DTOs
 
         [Required(ErrorMessage = "Role is a required field")]
         public string Role { get; set; }
+
+        [Required(ErrorMessage = "Password is a required field")]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Email is a required field")]
+        public string Email { get; set; }
     }
 }

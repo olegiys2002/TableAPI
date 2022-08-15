@@ -21,5 +21,9 @@ namespace Infrastructure.Repositories
         {
            return await _applicationContext.Users.FirstOrDefaultAsync(user=>user.Id == id);
         }
+        public async Task<User> IsUserExists(string email , string passwordHash)
+        {
+            return await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == passwordHash);
+        }
     }
 }

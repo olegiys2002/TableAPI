@@ -28,11 +28,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> GetUserById(int id)
         {
             UserDTO userDTO = await _userService.GetUserById(id);
-            if (userDTO == null)
-            {
-                return NotFound();
-            }
-            return Ok(userDTO);
+            return userDTO == null? NotFound() : Ok(userDTO);
         }
 
         [HttpPost]

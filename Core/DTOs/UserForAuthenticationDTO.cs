@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Core.DTOs
 {
-    public class UserDTO : DTO
+    public class UserForAuthenticationDTO
     {
-        public string Name { get; set; }
-        public string Role { get; set; }
+        public string Password { get; set; }
         public string Email { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace Core.IServices.IRepositories
     public interface IUserRepository : IEntityRepository<User>
     {
        Task<User> GetUser(int id);
+       Task<User> IsUserExists(string email, string passwordHash);
     }
 }

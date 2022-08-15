@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,8 +24,8 @@ namespace Core.Services
         public async Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO)
         {
             User user = _mapper.Map<User>(userForCreationDTO);
-          
-          
+            user.PasswordHash = HashPassword(userForCreationDTO.Password);
+         
             _unitOfWork.UserRepository.Create(user);
             await _unitOfWork.SaveChangesAsync();
 
@@ -75,14 +76,21 @@ namespace Core.Services
             {
                 return false;
             }
-
+            
             user.Name = userForUpdatingDTO.Name;
             user.Role = userForUpdatingDTO.Role;
-         
-
+            user.Email = userForUpdatingDTO.Email;
+            user.PasswordHash = HashPassword(userForUpdatingDTO.Password);
             await _unitOfWork.SaveChangesAsync();
 
             return true;
+        }
+
+        private string HashPassword(string password)
+        {
+            Byte[] inputBytes = Encoding.UTF8.GetBytes(password);
+            Byte[] hashedBytes = SHA256.HashData(inputBytes);
+            return BitConverter.ToString(hashedBytes);
         }
 
     }

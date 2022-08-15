@@ -1,6 +1,7 @@
 ﻿using BookingTablesAPI.Filters;
 using Core.DTOs;
 using Core.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="OrderById")]
+        [Authorize]
         [ValidationFilter]
         public async Task<IActionResult> GetOrder(int id)
         {
@@ -24,6 +26,7 @@ namespace BookingTablesAPI.Controllers
             return orderDTO == null ? NotFound() : Ok(orderDTO);
         }
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> GetOrders()
         {
             List<OrderDTO> orderDTOs = await _orderService.GetOrders();
