@@ -1,5 +1,9 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 
 namespace BookingTablesAPI.ServiceExtensions
 {
@@ -10,6 +14,7 @@ namespace BookingTablesAPI.ServiceExtensions
             string connectionString = configuration.GetConnectionString("sqlConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString,
                                                       builder => builder.MigrationsAssembly("BookingTablesAPI")));
+
         }
     }
 }

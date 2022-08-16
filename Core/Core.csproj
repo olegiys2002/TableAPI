@@ -16,9 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="HashPassword">
-      <HintPath>..\..\HashPassword\HashPassword\bin\Debug\net6.0\HashPassword.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\SharedAssembly\Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -49,7 +49,7 @@ namespace BookingTablesAPI.Migrations
 
                     b.HasIndex("TableId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Table", b =>
@@ -74,7 +74,7 @@ namespace BookingTablesAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tables");
+                    b.ToTable("Tables", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.User", b =>
@@ -109,7 +109,7 @@ namespace BookingTablesAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Core.Models.Order", b =>

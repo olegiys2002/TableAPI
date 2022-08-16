@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace Infrastructure
         public DbSet<Table> Tables { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<User> Users { get; set; }
+
         public ApplicationContext(DbContextOptions options) : base(options)
         {
 

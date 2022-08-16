@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
-using HashPassword;
+using SharedAssembly;
 
 namespace Core.Services
 {
