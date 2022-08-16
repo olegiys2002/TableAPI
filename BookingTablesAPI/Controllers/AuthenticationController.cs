@@ -12,20 +12,22 @@ namespace BookingTablesAPI.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly IAuthenticationManager _authenticationManager;
-        public AuthenticationController(IAuthenticationManager authenticationManager)
+        private readonly ITokenService _tokenService;
+        public AuthenticationController(IAuthenticationManager authenticationManager,ITokenService tokenService)
         {
             _authenticationManager = authenticationManager;
+            _tokenService = tokenService;
         }
         [HttpPost("{login}")]
         [ValidationFilter]
-        public async Task<IActionResult> Authenticate(UserForAuthenticationDTO user)
+        public async Task<IActionResult> Authenticate(UserForAuthenticationDTO userAuth)
         {
-          bool isValid =  await _authenticationManager.ValidateUser(user);
-          if (isValid == false)
+          User user =  await _authenticationManager.ValidateUser(userAuth);
+          if (user == null)
           {
                 return BadRequest();
           }
-           string token =_authenticationManager.CreateToken();
+           string token =_tokenService.CreateToken(user);
            return Ok(token);
 
         }

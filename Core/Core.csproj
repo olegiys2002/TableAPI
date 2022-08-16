@@ -15,4 +15,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.22.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="HashPassword">
+      <HintPath>..\..\HashPassword\HashPassword\bin\Debug\net6.0\HashPassword.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
