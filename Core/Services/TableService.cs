@@ -20,14 +20,29 @@ namespace Core.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+        
+        public async Task<List<TableDTO>> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
+        {
+            var tables = new List<Table>();
+            foreach (var tableForCreationDTO in tableFormDTOs)
+            {
+                var table = _mapper.Map<Table>(tableForCreationDTO);
+                _unitOfWork.TableRepository.Create(table);
+                tables.Add(table);
+            }
+            await _unitOfWork.SaveChangesAsync();
+            var tablesDTO = _mapper.Map<List<TableDTO>>(tables);
+            return tablesDTO;
+        }
+
         public async Task<TableDTO> CreateTable(TableFormDTO tableForCreationDTO)
         {
-            Table table = _mapper.Map<Table>(tableForCreationDTO);
+            var table = _mapper.Map<Table>(tableForCreationDTO);
 
             _unitOfWork.TableRepository.Create(table);
             await _unitOfWork.SaveChangesAsync();
 
-            TableDTO tableDTO = _mapper.Map<TableDTO>(table);
+            var tableDTO = _mapper.Map<TableDTO>(table);
             return tableDTO;
         }
 
@@ -62,6 +77,17 @@ namespace Core.Services
         {
             List<Table> tables = await _unitOfWork.TableRepository.FindAll(false).ToListAsync();
             List<TableDTO> tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
+            return tablesDTOs;
+        }
+
+        public async Task<List<TableDTO>> GetTablesById(IEnumerable<int> ids)
+        {
+            var tables = await _unitOfWork.TableRepository.GetTablesByIds(ids).ToListAsync();
+            if (tables == null)
+            {
+                return null;
+            }
+            var tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
             return tablesDTOs;
         }
 

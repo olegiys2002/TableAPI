@@ -32,7 +32,22 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> GetTables()
         {
             List<TableDTO> tableDTOs = await _tableService.GetTables();
-            return Ok(tableDTOs);
+            return tableDTOs == null ? NotFound() : Ok(tableDTOs); 
+        }
+        [HttpPost("collection")]
+        [ValidationFilter]
+        public async Task<IActionResult> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
+        {
+           var tables = await _tableService.CreateCollectionOfTables(tableFormDTOs);
+           var ids = string.Join(",", tables.Select(table => table.Id));
+           return tables == null ? BadRequest() : CreatedAtRoute("Collection", new { ids }, tables);
+        }
+
+        [HttpGet("collection/({ids})",Name ="Collection")]
+        public async Task<IActionResult> GetCollectionOfTables(IEnumerable<int> ids)
+        {
+           var tablesDTOs =  await _tableService.GetTablesById(ids);
+           return Ok(tablesDTOs);
         }
 
         [HttpPost]

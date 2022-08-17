@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingTablesAPI.Controllers
 {
     [Route("api/orders")]
+    [Authorize]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -18,7 +19,6 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="OrderById")]
-        [Authorize]
         [ValidationFilter]
         public async Task<IActionResult> GetOrder(int id)
         {
@@ -26,11 +26,10 @@ namespace BookingTablesAPI.Controllers
             return orderDTO == null ? NotFound() : Ok(orderDTO);
         }
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetOrders()
         {
             List<OrderDTO> orderDTOs = await _orderService.GetOrders();
-            return Ok(orderDTOs);
+            return orderDTOs == null ? NotFound() : Ok(orderDTOs);
         }
         [HttpPost]
         [ValidationFilter]

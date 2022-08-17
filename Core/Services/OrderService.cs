@@ -24,15 +24,36 @@ namespace Core.Services
         public async Task<OrderDTO> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             Order order = _mapper.Map<Order>(orderForCreationDTO);
-            Table table = await _unitOfWork.TableRepository.GetTable(orderForCreationDTO.TableId);
-            
-            if (table == null || order.CountOfPeople>table.CountOfSeats)
+            var countOfSeats = 0;
+
+            var tables = new List<Table>();
+            foreach (var id in orderForCreationDTO.TablesId)
+            {
+                var table = await _unitOfWork.TableRepository.GetTable(id);
+                if (table == null)
+                {
+                    return null;
+                }
+                countOfSeats += table.CountOfSeats;
+                tables.Add(table);
+            }
+            //for (int tableId = 0; tableId < orderForCreationDTO.TablesId.Count; tableId++)
+            //{
+            //    var table = await _unitOfWork.TableRepository.GetTable(tableId);
+            //    countOfSeats += table.CountOfSeats;
+            //    if (table == null)
+            //    {
+            //        return null;
+            //    }
+            //    tables.Add(table);
+            //}
+          
+            if (countOfSeats < orderForCreationDTO.CountOfPeople)
             {
                 return null;
             }
-            order.Table = table;
-     
 
+            order.Table = tables;
             _unitOfWork.OrderRepository.Create(order);
             await _unitOfWork.SaveChangesAsync();
             OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
@@ -73,16 +94,28 @@ namespace Core.Services
         public async Task<bool> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
             Order order = await _unitOfWork.OrderRepository.GetOrder(id);
-            Table table = await _unitOfWork.TableRepository.GetTable(orderForUpdatingDTO.TableId);
+            var countOfSeats = 0;
 
-            if (order == null || table == null|| table.CountOfSeats < order.CountOfPeople)
+            var tables = new List<Table>();
+            foreach (var tableId in orderForUpdatingDTO.TablesId)
+            {
+                var table = await _unitOfWork.TableRepository.GetTable(tableId);
+                if (table == null)
+                {
+                    return false;
+                }
+                countOfSeats += table.CountOfSeats;
+                tables.Add(table);
+            }
+
+            if (countOfSeats < orderForUpdatingDTO.CountOfPeople)
             {
                 return false;
             }
 
             order.CountOfPeople = orderForUpdatingDTO.CountOfPeople;
             order.DateOfReservation = orderForUpdatingDTO.DateOfReservation;
-            order.Table = table;
+            order.Table = tables;
           
 
             await _unitOfWork.SaveChangesAsync();

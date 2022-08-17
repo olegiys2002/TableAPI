@@ -21,5 +21,9 @@ namespace Infrastructure.Repositories
         {
            return await _applicationContext.Tables.FirstOrDefaultAsync(table=>table.Id == id);
         }
+        public IQueryable<Table> GetTablesByIds(IEnumerable<int> ids)
+        {
+           return _applicationContext.Tables.Where(table => ids.Contains(table.Id)).AsNoTracking();   
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace Core.IServices.IRepositories
     public interface ITableRepository : IEntityRepository<Table>
     {
         Task<Table> GetTable(int id);
+        IQueryable<Table> GetTablesByIds(IEnumerable<int> ids);
     }
 }
