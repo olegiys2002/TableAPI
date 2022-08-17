@@ -25,5 +25,10 @@ namespace Infrastructure.Repositories
         {
             return await _applicationContext.Users.FirstOrDefaultAsync(user => user.Email == email && user.PasswordHash == passwordHash);
         }
+        public async Task<Avatar> GetAvatarAsync(int id)
+        {
+            var avatar = await _applicationContext.Users.Include(user=>user.Avatar).FirstOrDefaultAsync(user=>user.Id == id );
+            return avatar.Avatar;
+        }
     }
 }

@@ -11,5 +11,6 @@ namespace Core.IServices.IRepositories
     {
        Task<User> GetUser(int id);
        Task<User> IsUserExists(string email, string passwordHash);
+       Task<Avatar> GetAvatarAsync(int id);
     }
 }

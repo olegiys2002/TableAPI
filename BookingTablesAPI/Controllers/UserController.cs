@@ -17,25 +17,30 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet]
-        
         public async Task<IActionResult> GetUsers()
         {
-            List<UserDTO> userDTOs = await _userService.GetUsers();
+            var userDTOs = await _userService.GetUsers();
             return Ok(userDTOs);
         }
         [HttpGet("{id}",Name ="UserById")]
         [ValidationFilter]
         public async Task<IActionResult> GetUserById(int id)
         {
-            UserDTO userDTO = await _userService.GetUserById(id);
+            var userDTO = await _userService.GetUserById(id);
             return userDTO == null? NotFound() : Ok(userDTO);
         }
-
+        [Route("{id}/avatar")]
+        [HttpGet]
+        public async Task<IActionResult> GetUserAvatar(int id)
+        {
+           var avatarDTO = await _userService.GetUserAvatar(id);
+           return avatarDTO == null ? NotFound() : Ok(avatarDTO);
+        }
         [HttpPost]
         [ValidationFilter]
-        public async Task<IActionResult> CreateUser(UserFormDTO userForCreationDTO)
+        public async Task<IActionResult> CreateUser([FromForm]UserFormDTO userForCreationDTO)
         {
-            UserDTO userDTO = await _userService.CreateUser(userForCreationDTO);
+            var userDTO = await _userService.CreateUser(userForCreationDTO);
             return CreatedAtRoute("UserById",new { userDTO.Id },userDTO);
         }
 
@@ -43,7 +48,7 @@ namespace BookingTablesAPI.Controllers
         [ValidationFilter]
         public async Task<IActionResult> UpdateUser(int id , UserFormDTO userForUpdatingDTO)
         {
-            bool isSuccess = await _userService.UpdateUser(id,userForUpdatingDTO);
+            var isSuccess = await _userService.UpdateUser(id,userForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();
         }
 
@@ -51,7 +56,7 @@ namespace BookingTablesAPI.Controllers
         [ValidationFilter]
         public async Task<IActionResult> DeleteUser(int id)
         {
-           bool isSuccess = await _userService.DeleteUser(id);
+           var isSuccess = await _userService.DeleteUser(id);
            return isSuccess ? NoContent() : NotFound();
         }
     }

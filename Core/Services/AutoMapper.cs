@@ -19,6 +19,7 @@ namespace Core.Services
             CreateMap<Table, TableDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<UserFormDTO, User>().ReverseMap();
+            CreateMap<Avatar, AvatarDTO>().ReverseMap();
         
 
         }

@@ -10,6 +10,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using SharedAssembly;
+using Shared;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Services
 {
@@ -25,7 +27,15 @@ namespace Core.Services
         public async Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO)
         {
             User user = _mapper.Map<User>(userForCreationDTO);
-           
+            byte[] imageData;
+            var image = userForCreationDTO.AvatarFormDTO.Image;
+            imageData = Image.ImageInBytes(image);
+
+            user.Avatar = new Avatar()
+            {
+                Image = imageData
+            };
+
             user.PasswordHash = Hash.HashPassword(userForCreationDTO.Password);
          
             _unitOfWork.UserRepository.Create(user);
@@ -36,7 +46,6 @@ namespace Core.Services
             return userDTO;
             
         }
-
         public async Task<bool> DeleteUser(int id)
         {
             User user = await _unitOfWork.UserRepository.GetUser(id);
@@ -52,24 +61,34 @@ namespace Core.Services
 
         public async Task<UserDTO> GetUserById(int id)
         {
-            User user = await _unitOfWork.UserRepository.GetUser(id);
+            var user = await _unitOfWork.UserRepository.GetUser(id);
             if (user == null)
             {
                 return null;
             }
-            UserDTO userDTO = _mapper.Map<UserDTO>(user);
+            var userDTO = _mapper.Map<UserDTO>(user);
 
             return userDTO;
         }
 
         public async Task<List<UserDTO>> GetUsers()
         {
-            List<User> users = await _unitOfWork.UserRepository.FindAll(false).ToListAsync();
-            List<UserDTO> userDTOs = _mapper.Map<List<UserDTO>>(users);
+            var users = await _unitOfWork.UserRepository.FindAll(false).ToListAsync();
+            var userDTOs = _mapper.Map<List<UserDTO>>(users);
 
             return userDTOs;
         }
 
+        public async Task<AvatarDTO> GetUserAvatar(int id)
+        {
+           var avatar = await _unitOfWork.UserRepository.GetAvatarAsync(id);
+           if (avatar == null)
+           {
+                return null;
+           }
+           var avatarDTO = _mapper.Map<AvatarDTO>(avatar);
+           return avatarDTO;
+        }
         public async Task<bool> UpdateUser(int id,UserFormDTO userForUpdatingDTO)
         {
             User user = await _unitOfWork.UserRepository.GetUser(id);
@@ -78,7 +97,16 @@ namespace Core.Services
             {
                 return false;
             }
-            
+
+            byte[] imageData;
+            var image = userForUpdatingDTO.AvatarFormDTO.Image;
+            imageData = Image.ImageInBytes(image);
+
+            user.Avatar = new Avatar()
+            {
+                Image = imageData
+            };
+
             user.Name = userForUpdatingDTO.Name;
             user.Role = userForUpdatingDTO.Role;
             user.Email = userForUpdatingDTO.Email;

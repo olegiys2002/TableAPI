@@ -20,5 +20,6 @@ namespace Core.DTOs
 
         [Required(ErrorMessage = "Email is a required field")]
         public string Email { get; set; }
+        public AvatarFormDTO AvatarFormDTO { get; set; }
     }
 }

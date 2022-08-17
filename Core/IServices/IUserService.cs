@@ -14,5 +14,6 @@ namespace Core.IServices
         Task<List<UserDTO>> GetUsers();
         Task<UserDTO> GetUserById(int id);
         Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO);
+        Task<AvatarDTO> GetUserAvatar(int id);
     }
 }
