@@ -1,0 +1,62 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+version: '3.4'
+
+services:
+  bookingtablesapi:
+    image: bookingtablesapi
+    build:
+      context: .
+      dockerfile: BookingTablesAPI/Dockerfile
+    ports:
+      - 5053:5053
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKEBanana
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+    depends_on:
+      - bookingtablesapi-db
+
+  shared:
+    image: shared
+    build:
+      context: .
+      dockerfile: SharedAssembly/Dockerfile
+    ports:
+      - 5053:5053
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+  core:
+    image: core
+    build:
+      context: .
+      dockerfile: Core/Dockerfile
+    ports:
+      - 5053:5053
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+infrastructure:
+    image: infrastructure
+    build:
+      context: .
+      dockerfile: Infrastructure/Dockerfile
+    ports:
+      - 5053:5053
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ~/.vsdbg:/remote_debugger:rw
+
+bookingtablesapi-db:
+     image: mcr.microsoft.com/mssql/server:2019-latest
+     environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=aurum123ILIKEBanana
+     ports:
+      - "1433"

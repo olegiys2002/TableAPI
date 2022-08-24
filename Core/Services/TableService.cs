@@ -2,6 +2,9 @@
 using Core.DTOs;
 using Core.IServices;
 using Core.Models;
+using FireSharp;
+using FireSharp.Config;
+using FireSharp.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,10 +18,12 @@ namespace Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public TableService(IUnitOfWork unitOfWork,IMapper mapper)
+        private readonly IFirebaseClient _client;
+        public TableService(IUnitOfWork unitOfWork,IMapper mapper,IFirebaseClient client)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _client = client;
         }
         
         public async Task<List<TableDTO>> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
@@ -43,6 +48,7 @@ namespace Core.Services
             await _unitOfWork.SaveChangesAsync();
 
             var tableDTO = _mapper.Map<TableDTO>(table);
+            //var setter = await _client.SetAsync<TableDTO>($"TableList/+{tableDTO.Id}",tableDTO);
             return tableDTO;
         }
 
@@ -64,12 +70,14 @@ namespace Core.Services
         public async Task<TableDTO> GetTableById(int id)
         {
             Table table = await _unitOfWork.TableRepository.GetTable(id);
+            //var result = await _client.GetAsync($"TableList/+{id}");
+            //var testTable = result.ResultAs<Table>();
             if (table == null)
             {
                 return null;
             }
             TableDTO tableDTO = _mapper.Map<TableDTO>(table);
-
+          
             return tableDTO;
         }
 
@@ -82,7 +90,7 @@ namespace Core.Services
 
         public async Task<List<TableDTO>> GetTablesById(IEnumerable<int> ids)
         {
-            var tables = await _unitOfWork.TableRepository.GetTablesByIds(ids).ToListAsync();
+            var tables = await _unitOfWork.TableRepository.GetTablesByIds(ids,false).ToListAsync();
             if (tables == null)
             {
                 return null;

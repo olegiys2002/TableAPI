@@ -1,0 +1,20 @@
+version: '3.4'
+
+services:
+  bookingtablesapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKEBanana
+    ports:
+      - "80"
+      - "443"
+    depends_on:
+      - bookingtablesapi-db
+  bookingtablesapi-db:
+     image: mcr.microsoft.com/mssql/server:2019-latest
+     environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=aurum123ILIKEBanana
+     ports:
+      - "1433"

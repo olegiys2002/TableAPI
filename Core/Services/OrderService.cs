@@ -3,11 +3,6 @@ using Core.DTOs;
 using Core.IServices;
 using Core.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Services
 {
@@ -23,31 +18,22 @@ namespace Core.Services
         }
         public async Task<OrderDTO> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
-            Order order = _mapper.Map<Order>(orderForCreationDTO);
+            var order = _mapper.Map<Order>(orderForCreationDTO);
             var countOfSeats = 0;
 
-            var tables = new List<Table>();
-            foreach (var id in orderForCreationDTO.TablesId)
+            var tables = await _unitOfWork.TableRepository.GetTablesByIds(orderForCreationDTO.TablesId,true).ToListAsync();
+      
+            if (tables.Count == 0)
             {
-                var table = await _unitOfWork.TableRepository.GetTable(id);
-                if (table == null)
-                {
-                    return null;
-                }
-                countOfSeats += table.CountOfSeats;
-                tables.Add(table);
+                return null;
             }
-            //for (int tableId = 0; tableId < orderForCreationDTO.TablesId.Count; tableId++)
-            //{
-            //    var table = await _unitOfWork.TableRepository.GetTable(tableId);
-            //    countOfSeats += table.CountOfSeats;
-            //    if (table == null)
-            //    {
-            //        return null;
-            //    }
-            //    tables.Add(table);
-            //}
-          
+
+            foreach (var table in tables)
+            {
+                countOfSeats += table.CountOfSeats;
+            
+            }
+
             if (countOfSeats < orderForCreationDTO.CountOfPeople)
             {
                 return null;
@@ -56,14 +42,15 @@ namespace Core.Services
             order.Table = tables;
             _unitOfWork.OrderRepository.Create(order);
             await _unitOfWork.SaveChangesAsync();
-            OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
+            var orderDTO = _mapper.Map<OrderDTO>(order);
             return orderDTO;
-            
+
+
         }
 
         public async Task<bool> DeleteOrder(int id)
         {
-            Order order = await _unitOfWork.OrderRepository.GetOrder(id);
+            var order = await _unitOfWork.OrderRepository.GetOrder(id);
             if (order == null)
             {
                 return false;
@@ -75,37 +62,42 @@ namespace Core.Services
 
         public async Task<OrderDTO> GetOrder(int id)
         {
-            Order order = await _unitOfWork.OrderRepository.GetOrder(id);
+            var order = await _unitOfWork.OrderRepository.GetOrder(id);
             if (order == null)
             {
                 return null;
             }
-            OrderDTO orderDTO = _mapper.Map<OrderDTO>(order);
+            var orderDTO = _mapper.Map<OrderDTO>(order);
             return orderDTO;
         }
 
         public async Task<List<OrderDTO>> GetOrders()
         {
-            List<Order> orders = await _unitOfWork.OrderRepository.FindAll(false).ToListAsync();
-            List<OrderDTO> orderDTOs = _mapper.Map<List<OrderDTO>>(orders);
+            var orders = await _unitOfWork.OrderRepository.FindAll(false).ToListAsync();
+            if (orders == null)
+            {
+                return null;
+            }
+            var orderDTOs = _mapper.Map<List<OrderDTO>>(orders);
             return orderDTOs;
         }
 
         public async Task<bool> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
-            Order order = await _unitOfWork.OrderRepository.GetOrder(id);
+            var order = await _unitOfWork.OrderRepository.GetOrder(id);
             var countOfSeats = 0;
 
-            var tables = new List<Table>();
-            foreach (var tableId in orderForUpdatingDTO.TablesId)
+            var tables = await _unitOfWork.TableRepository.GetTablesByIds(orderForUpdatingDTO.TablesId, true).ToListAsync();
+
+            if (tables.Count == 0)
             {
-                var table = await _unitOfWork.TableRepository.GetTable(tableId);
-                if (table == null)
-                {
-                    return false;
-                }
+                return false;
+            }
+
+            foreach (var table in tables)
+            {
                 countOfSeats += table.CountOfSeats;
-                tables.Add(table);
+
             }
 
             if (countOfSeats < orderForUpdatingDTO.CountOfPeople)

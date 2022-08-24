@@ -1,6 +1,7 @@
 ﻿using BookingTablesAPI.Filters;
 using Core.DTOs;
 using Core.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,11 +17,12 @@ namespace BookingTablesAPI.Controllers
             _userService = userService;
         }
 
+        //[Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
             var userDTOs = await _userService.GetUsers();
-            return Ok(userDTOs);
+            return userDTOs == null ? NotFound() : Ok(userDTOs);
         }
         [HttpGet("{id}",Name ="UserById")]
         [ValidationFilter]
@@ -41,7 +43,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> CreateUser([FromForm]UserFormDTO userForCreationDTO)
         {
             var userDTO = await _userService.CreateUser(userForCreationDTO);
-            return CreatedAtRoute("UserById",new { userDTO.Id },userDTO);
+            return userDTO == null ? BadRequest() : CreatedAtRoute("UserById",new { userDTO.Id },userDTO);
         }
 
         [HttpPut("{id}")]

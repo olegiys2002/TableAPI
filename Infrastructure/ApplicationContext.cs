@@ -1,4 +1,5 @@
-﻿using Core.Models;
+﻿using Core.IServices;
+using Core.Models;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure
 {
-    public class ApplicationContext : DbContext 
+    public class ApplicationContext : DbContext
     {
         public DbSet<Table> Tables { get; set; }
         public DbSet<Order> Orders { get; set; }

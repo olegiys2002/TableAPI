@@ -4,13 +4,18 @@ using Core.IServices;
 using Core.IServices.IRepositories;
 using Core.Models.JWT;
 using Core.Services;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-
+using FireSharp.Config;
+using FireSharp.Response;
+using FireSharp.Interfaces;
+using FireSharp;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +31,9 @@ builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureAppServices();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAppSettings(builder.Configuration);
+builder.Services.ConfigureFirebaseDatabase();
+builder.Services.ConfigureStorage();
+builder.Services.ConfigureCQRS();
 
 var app = builder.Build();
 
@@ -37,7 +45,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 

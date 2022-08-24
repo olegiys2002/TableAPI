@@ -12,6 +12,10 @@ using System.Threading.Tasks;
 using SharedAssembly;
 using Shared;
 using Microsoft.AspNetCore.Http;
+using Firebase.Storage;
+using Firebase.Auth;
+using Core.Models.Storage;
+using Microsoft.Extensions.Options;
 
 namespace Core.Services
 {
@@ -19,15 +23,22 @@ namespace Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork,IMapper mapper)
+        private readonly IStorage _storage;
+
+        public UserService(IUnitOfWork unitOfWork,IMapper mapper,IStorage storage)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _storage = storage; 
         }
         public async Task<UserDTO> CreateUser(UserFormDTO userForCreationDTO)
         {
-            User user = _mapper.Map<User>(userForCreationDTO);
+            var user = _mapper.Map<Models.User>(userForCreationDTO);
             byte[] imageData;
+            if (userForCreationDTO.AvatarFormDTO.Image == null)
+            {
+                return null;
+            }
             var image = userForCreationDTO.AvatarFormDTO.Image;
             imageData = Image.ImageInBytes(image);
 
@@ -36,6 +47,9 @@ namespace Core.Services
                 Image = imageData
             };
 
+            await _storage.CreateAvatarAsync(userForCreationDTO.AvatarFormDTO.Image);
+            
+           
             user.PasswordHash = Hash.HashPassword(userForCreationDTO.Password);
          
             _unitOfWork.UserRepository.Create(user);
@@ -48,7 +62,7 @@ namespace Core.Services
         }
         public async Task<bool> DeleteUser(int id)
         {
-            User user = await _unitOfWork.UserRepository.GetUser(id);
+            var user = await _unitOfWork.UserRepository.GetUser(id);
 
             if (user == null)
             {
@@ -74,6 +88,10 @@ namespace Core.Services
         public async Task<List<UserDTO>> GetUsers()
         {
             var users = await _unitOfWork.UserRepository.FindAll(false).ToListAsync();
+            if (users.Count == 0)
+            {
+                return null;
+            }
             var userDTOs = _mapper.Map<List<UserDTO>>(users);
 
             return userDTOs;
@@ -91,7 +109,7 @@ namespace Core.Services
         }
         public async Task<bool> UpdateUser(int id,UserFormDTO userForUpdatingDTO)
         {
-            User user = await _unitOfWork.UserRepository.GetUser(id);
+            var user = await _unitOfWork.UserRepository.GetUser(id);
 
             if (user == null)
             {
@@ -115,6 +133,8 @@ namespace Core.Services
 
             return true;
         }
+
+
 
     }
 }

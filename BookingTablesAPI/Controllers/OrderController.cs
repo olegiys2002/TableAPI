@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookingTablesAPI.Controllers
 {
     [Route("api/orders")]
-    [Authorize]
+    //[Authorize]
     [ApiController]
     public class OrderController : ControllerBase
     {
@@ -25,6 +25,7 @@ namespace BookingTablesAPI.Controllers
            OrderDTO orderDTO = await  _orderService.GetOrder(id);
             return orderDTO == null ? NotFound() : Ok(orderDTO);
         }
+        //[Authorize(Roles ="Admin")]
         [HttpGet]
         public async Task<IActionResult> GetOrders()
         {
