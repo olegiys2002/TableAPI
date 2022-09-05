@@ -42,6 +42,7 @@ namespace Core.Services
             var image = userForCreationDTO.AvatarFormDTO.Image;
             imageData = Image.ImageInBytes(image);
 
+            
             user.Avatar = new Avatar()
             {
                 Image = imageData
@@ -55,7 +56,7 @@ namespace Core.Services
             _unitOfWork.UserRepository.Create(user);
             await _unitOfWork.SaveChangesAsync();
 
-            UserDTO userDTO = _mapper.Map<UserDTO>(user);
+            var userDTO = _mapper.Map<UserDTO>(user);
 
             return userDTO;
             

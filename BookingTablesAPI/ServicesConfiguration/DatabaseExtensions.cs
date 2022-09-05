@@ -16,14 +16,11 @@ namespace BookingTablesAPI.ServiceExtensions
 
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString,
                                                       builder => builder.MigrationsAssembly("BookingTablesAPI")));
+
             //services.AddDbContext<ApplicationContext>(options =>
             //{
-            //    /*var server = Environment.GetEnvironmentVariable("ServerName");
-            //    var database = Environment.GetEnvironmentVariable("Database");
-            //    var userName = Environment.GetEnvironmentVariable("UserName");
-            //    var password = Environment.GetEnvironmentVariable("Password");*/
             //    var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-            //    options.UseSqlServer(connectionString, builder=>builder.MigrationsAssembly("BookingTablesAPI"));
+            //    options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("BookingTablesAPI"));
             //});
         }
     }

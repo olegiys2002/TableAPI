@@ -18,7 +18,7 @@ namespace BookingTablesAPI.Controllers
             _authenticationManager = authenticationManager;
             _tokenService = tokenService;
         }
-        [HttpPost("{login}")]
+        [HttpPost("login")]
         [ValidationFilter]
         public async Task<IActionResult> Authenticate(UserForAuthenticationDTO userAuth)
         {
@@ -28,7 +28,8 @@ namespace BookingTablesAPI.Controllers
                 return BadRequest();
           }
            string token =_tokenService.CreateToken(user);
-           return Ok(token);
+           
+           return Ok(new { Token = token});
 
         }
     }

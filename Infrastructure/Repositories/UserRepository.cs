@@ -11,10 +11,10 @@ namespace Infrastructure.Repositories
 {
     public class UserRepository : EntityRepository<User>,IUserRepository
     {
-        private readonly ApplicationContext _applicationContext;
+     
         public UserRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
-            _applicationContext = applicationContext;
+   
         }
 
         public async Task<User> GetUser(int id)

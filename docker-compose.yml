@@ -2,19 +2,23 @@ version: '3.4'
 
 services:
   bookingtablesapi:
-    environment:
+     image: ${DOCKER_REGISTRY-}bookingtablesapi
+     build:
+      context: .
+      dockerfile: BookingTablesAPI/Dockerfile
+     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKEBanana
-    ports:
+      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=sa;Password=aurum123ILIKE
+     ports:
       - "80"
       - "443"
-    depends_on:
+     depends_on:
       - bookingtablesapi-db
   bookingtablesapi-db:
-     image: mcr.microsoft.com/mssql/server:2019-latest
-     environment:
+   image: mcr.microsoft.com/mssql/server:2019-latest
+   environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=aurum123ILIKEBanana
-     ports:
+      - MSSQL_SA_PASSWORD=aurum123ILIKE   
+   ports:
       - "1433"

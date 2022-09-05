@@ -54,7 +54,7 @@ namespace Core.Services
 
         public async Task<bool> DeleteTable(int id)
         {
-          Table table = await _unitOfWork.TableRepository.GetTable(id);
+          var table = await _unitOfWork.TableRepository.GetTable(id);
 
           if (table == null)
           {
@@ -69,22 +69,22 @@ namespace Core.Services
 
         public async Task<TableDTO> GetTableById(int id)
         {
-            Table table = await _unitOfWork.TableRepository.GetTable(id);
+            var table = await _unitOfWork.TableRepository.GetTable(id);
             //var result = await _client.GetAsync($"TableList/+{id}");
             //var testTable = result.ResultAs<Table>();
             if (table == null)
             {
                 return null;
             }
-            TableDTO tableDTO = _mapper.Map<TableDTO>(table);
+            var tableDTO = _mapper.Map<TableDTO>(table);
           
             return tableDTO;
         }
 
         public async Task<List<TableDTO>> GetTables()
         {
-            List<Table> tables = await _unitOfWork.TableRepository.FindAll(false).ToListAsync();
-            List<TableDTO> tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
+            var tables = await _unitOfWork.TableRepository.FindAll(false).ToListAsync();
+            var tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
             return tablesDTOs;
         }
 
@@ -101,7 +101,7 @@ namespace Core.Services
 
         public async Task<bool> UpdateTable(int id ,TableFormDTO tableForUpdateDTO)
         {
-            Table table = await _unitOfWork.TableRepository.GetTable(id);
+            var table = await _unitOfWork.TableRepository.GetTable(id);
 
             if (table == null)
             {

@@ -2,6 +2,7 @@
 using Core.Models.JWT;
 using Core.Services;
 using Infrastructure;
+using MediatR;
 
 namespace BookingTablesAPI.ServicesConfiguration
 {
@@ -15,7 +16,12 @@ namespace BookingTablesAPI.ServicesConfiguration
             serviceCollection.AddScoped<IOrderService, OrderService>();
             serviceCollection.AddScoped<ITokenService, TokenService>();
             serviceCollection.AddScoped<IAuthenticationManager, AuthenticationManager>();
-        
+            serviceCollection.AddScoped<IRabbitMqService, RabbitMqProducer>();
+            serviceCollection.AddScoped<IJWTService, JWTService>();
+            serviceCollection.AddMediatR(AppDomain.CurrentDomain.Load("Core"));
+            serviceCollection.AddHttpContextAccessor();
+            serviceCollection.AddSignalR();
+
         }
     }
 }

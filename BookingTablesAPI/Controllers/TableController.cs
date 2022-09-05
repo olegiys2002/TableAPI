@@ -1,6 +1,9 @@
 ﻿using BookingTablesAPI.Filters;
+using Core.Commands;
 using Core.DTOs;
 using Core.IServices;
+using Core.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +13,20 @@ namespace BookingTablesAPI.Controllers
     [ApiController]
     public class TableController : ControllerBase
     {
+        private readonly IMediator _mediator;
         private readonly ITableService _tableService;
-        public TableController(ITableService tableService)
+        public TableController(ITableService tableService,IMediator mediator)
         {
             _tableService = tableService;
+            _mediator = mediator;
         }
 
         [HttpGet("{id}",Name ="tableById")]
         [ValidationFilter]
         public async Task<IActionResult> GetTable(int id)
         {
-            TableDTO tableDTO = await _tableService.GetTableById(id);
+            TableDTO tableDTO = await _mediator.Send(new GetTableQuery(id));
+            //TableDTO tableDTO = await _tableService.GetTableById(id);
 
             if (tableDTO == null)
             {
@@ -31,8 +37,9 @@ namespace BookingTablesAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTables()
         {
-            List<TableDTO> tableDTOs = await _tableService.GetTables();
-            return tableDTOs == null ? NotFound() : Ok(tableDTOs); 
+            var tablesDTOs = await _mediator.Send(new GetTablesQuery());
+            //List<TableDTO> tableDTOs = await _tableService.GetTables();
+            return tablesDTOs == null ? NotFound() : Ok(tablesDTOs); 
         }
         [HttpPost("collection")]
         [ValidationFilter]
@@ -54,7 +61,8 @@ namespace BookingTablesAPI.Controllers
         [ValidationFilter]
         public async Task<IActionResult> CreateTable(TableFormDTO tableForCreationDTO)
         {
-            TableDTO tableDTO = await _tableService.CreateTable(tableForCreationDTO);
+            TableDTO tableDTO = await _mediator.Send(new AddTableCommand(tableForCreationDTO));
+            //TableDTO tableDTO = await _tableService.CreateTable(tableForCreationDTO);
 
             return CreatedAtRoute("tableById",new { tableDTO.Id },tableDTO);
         }
@@ -63,7 +71,8 @@ namespace BookingTablesAPI.Controllers
         [ValidationFilter]
         public async Task<IActionResult> UpdateTable(int id, TableFormDTO tableForUpdatingDTO)
         {
-            bool isSuccess = await _tableService.UpdateTable(id, tableForUpdatingDTO);
+            bool isSuccess = await _mediator.Send(new UpdateTableCommand(tableForUpdatingDTO,id));
+            //bool isSuccess = await _tableService.UpdateTable(id, tableForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();
         }
 

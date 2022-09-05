@@ -11,10 +11,10 @@ namespace Infrastructure.Repositories
 {
     public class TableRepository : EntityRepository<Table> ,ITableRepository
     {
-        private readonly ApplicationContext _applicationContext;
+        
         public TableRepository(ApplicationContext applicationContext) : base (applicationContext)
         {
-            _applicationContext = applicationContext;
+         
         }
 
         public async Task<Table> GetTable(int id)

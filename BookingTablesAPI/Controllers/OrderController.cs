@@ -1,9 +1,11 @@
 ﻿using BookingTablesAPI.Filters;
 using Core.DTOs;
 using Core.IServices;
+using Core.Models.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -13,9 +15,11 @@ namespace BookingTablesAPI.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        public OrderController(IOrderService orderService)
+        private readonly IRabbitMqService _rabbitMqService;
+        public OrderController(IOrderService orderService,IRabbitMqService rabbitMqService)
         {
             _orderService = orderService;
+            _rabbitMqService = rabbitMqService;
         }
 
         [HttpGet("{id}",Name ="OrderById")]
@@ -27,21 +31,19 @@ namespace BookingTablesAPI.Controllers
         }
         //[Authorize(Roles ="Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetOrders([FromQuery] OrderRequestFeatures orderRequest)
         {
-            List<OrderDTO> orderDTOs = await _orderService.GetOrders();
+            List<OrderDTO> orderDTOs = await _orderService.GetOrders(orderRequest);
             return orderDTOs == null ? NotFound() : Ok(orderDTOs);
         }
+        [Authorize]
         [HttpPost]
         [ValidationFilter]
+     
         public async Task<IActionResult> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             OrderDTO orderDTO = await _orderService.CreateOrder(orderForCreationDTO);
-            if (orderDTO == null)
-            {
-                return BadRequest();
-            }
-            return CreatedAtRoute("OrderById", new { orderDTO.Id }, orderDTO);
+            return orderDTO == null ? BadRequest() : CreatedAtRoute("OrderById", new { orderDTO.Id }, orderDTO);
         }
         [HttpPut("{id}")]
         [ValidationFilter]

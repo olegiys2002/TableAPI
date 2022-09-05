@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories
     {
         public EntityRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
-            _applicationContext = applicationContext;
+           
         }
 
         public override void Create(T entity)

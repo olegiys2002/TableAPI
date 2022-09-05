@@ -11,10 +11,9 @@ namespace Infrastructure.Repositories
 {
     public class OrderRepository : EntityRepository<Order>,IOrderRepository
     {
-        private readonly ApplicationContext _applicationContext;
         public OrderRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
-            _applicationContext = applicationContext;
+          
         }
 
         public async Task<Order> GetOrder(int id)

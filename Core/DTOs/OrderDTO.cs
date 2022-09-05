@@ -9,7 +9,7 @@ namespace Core.DTOs
     public class OrderDTO : DTO
     {
        
-        public List<TableDTO> TableDTO { get; set; }
+        public List<TableDTO> Tables { get; set; }
         public int CountOfPeople { get; set; }
         public DateTime DateOfReservation { get; set; }
 

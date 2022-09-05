@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookingTablesAPI.Controllers
 {
+    [Authorize(Roles ="Admin")]
     [Route("api/users")]
     [ApiController]
     public class UserController : ControllerBase
@@ -40,15 +41,16 @@ namespace BookingTablesAPI.Controllers
         }
         [HttpPost]
         [ValidationFilter]
-        public async Task<IActionResult> CreateUser([FromForm]UserFormDTO userForCreationDTO)
+        [AllowAnonymous]
+        public async Task<IActionResult> CreateUser([FromForm]UserFormDTO trys)
         {
-            var userDTO = await _userService.CreateUser(userForCreationDTO);
+            var userDTO = await _userService.CreateUser(trys);
             return userDTO == null ? BadRequest() : CreatedAtRoute("UserById",new { userDTO.Id },userDTO);
         }
 
         [HttpPut("{id}")]
         [ValidationFilter]
-        public async Task<IActionResult> UpdateUser(int id , UserFormDTO userForUpdatingDTO)
+        public async Task<IActionResult> UpdateUser(int id ,[FromForm] UserFormDTO userForUpdatingDTO)
         {
             var isSuccess = await _userService.UpdateUser(id,userForUpdatingDTO);
             return isSuccess ? NoContent() : NotFound();
