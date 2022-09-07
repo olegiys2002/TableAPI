@@ -11,14 +11,17 @@ namespace BookingTablesAPI.ServicesConfiguration
     public static class FirebaseExtensions
     {
      
-      public static void ConfigureFirebaseDatabase(this IServiceCollection services)
+      public static void ConfigureFirebaseDatabase(this IServiceCollection services,IConfiguration configuration)
       {
-            services.AddScoped<IFirebaseConfig, FireSharp.Config.FirebaseConfig>();
+            var fireBaseConfig = configuration.GetSection("FirebaseSettings");
+            var authSecret = fireBaseConfig.GetSection("AuthSecret").Value;
+            var basePath = fireBaseConfig.GetSection("BasePath").Value;
+            //services.AddScoped<IFirebaseConfig, FireSharp.Config.FirebaseConfig>();
 
             IFirebaseConfig firebaseConfig = new FireSharp.Config.FirebaseConfig()
             {
-                AuthSecret = "nokbEXFT29xfzDBmiKf9GMQ4Xxhho7n9Clu0CkEl",
-                BasePath = "https://tableapi-882ce-default-rtdb.firebaseio.com/"
+                AuthSecret = authSecret,
+                BasePath = basePath
             };
             services.AddScoped<IFirebaseClient>(opt => new FirebaseClient(firebaseConfig));
       }

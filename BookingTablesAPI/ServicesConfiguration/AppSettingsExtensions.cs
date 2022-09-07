@@ -1,4 +1,5 @@
 ﻿using Core.Models.JWT;
+using Core.Models.Rabbit;
 using Core.Models.Storage;
 
 namespace BookingTablesAPI.ServicesConfiguration
@@ -9,7 +10,7 @@ namespace BookingTablesAPI.ServicesConfiguration
         {
             services.Configure<JwtSettingsOptions>(configuration.GetSection(JwtSettingsOptions.JwtSettings));
             services.Configure<FireStorageOptions>(configuration.GetSection(FireStorageOptions.FireStorageSettings));
-            
+            services.Configure<RabbitMqOptions>(configuration.GetSection(RabbitMqOptions.RabbitMq));
         }
     }
 }

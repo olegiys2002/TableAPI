@@ -2,10 +2,12 @@
 using Core.Commands;
 using Core.DTOs;
 using Core.IServices;
+using Core.Models.Cache;
 using Core.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -19,6 +21,7 @@ namespace BookingTablesAPI.Controllers
         {
             _tableService = tableService;
             _mediator = mediator;
+       
         }
 
         [HttpGet("{id}",Name ="tableById")]
@@ -26,13 +29,11 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> GetTable(int id)
         {
             TableDTO tableDTO = await _mediator.Send(new GetTableQuery(id));
+
+            
             //TableDTO tableDTO = await _tableService.GetTableById(id);
 
-            if (tableDTO == null)
-            {
-                return NotFound();
-            }
-            return Ok(tableDTO);
+            return tableDTO == null ? NotFound() : Ok(tableDTO);
         }
         [HttpGet]
         public async Task<IActionResult> GetTables()

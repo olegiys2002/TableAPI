@@ -6,6 +6,7 @@ using FireSharp;
 using FireSharp.Config;
 using FireSharp.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +20,14 @@ namespace Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IFirebaseClient _client;
-        public TableService(IUnitOfWork unitOfWork,IMapper mapper,IFirebaseClient client)
+
+        private readonly IMemoryCache _memoryCache;
+        public TableService(IUnitOfWork unitOfWork,IMapper mapper,IFirebaseClient client,IMemoryCache memoryCache)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _client = client;
+            _memoryCache = memoryCache;
         }
         
         public async Task<List<TableDTO>> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
@@ -85,6 +89,7 @@ namespace Core.Services
         {
             var tables = await _unitOfWork.TableRepository.FindAll(false).ToListAsync();
             var tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
+
             return tablesDTOs;
         }
 

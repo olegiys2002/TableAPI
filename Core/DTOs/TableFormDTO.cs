@@ -9,12 +9,7 @@ namespace Core.DTOs
 {
     public class TableFormDTO
     {
-        [Required(ErrorMessage ="Number is a required field")]
-        [Range(1, int.MaxValue)]
         public int Number { get; set; }
-
-        [Required(ErrorMessage ="Count of Seats is a required field")]
-        [Range(1, 100)]
         public int CountOfSeats { get; set; }
     }
 }

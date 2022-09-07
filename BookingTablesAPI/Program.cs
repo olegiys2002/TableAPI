@@ -1,6 +1,10 @@
 using BookingTablesAPI.ServiceExtensions;
 using BookingTablesAPI.ServicesConfiguration;
+using BookingTablesAPI.Validation.Order;
+using Core.Models.Cache;
 using Core.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,10 +19,13 @@ builder.Services.ConfigureAutomapper();
 builder.Services.ConfigureAppServices();
 builder.Services.ConfigureAuthentication(builder.Configuration);
 builder.Services.ConfigureAppSettings(builder.Configuration);
-builder.Services.ConfigureFirebaseDatabase();
+builder.Services.ConfigureFirebaseDatabase(builder.Configuration);
 builder.Services.ConfigureStorage();
 builder.Services.ConfigureCQRS();
 builder.Services.ConfigureSwagger();
+builder.Services.ConfigureFluentValidation();
+builder.Services.ConfigureCaching();
+builder.Services.ConfigureRedis(builder.Configuration);
 
 
 
