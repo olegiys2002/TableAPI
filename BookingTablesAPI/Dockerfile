@@ -11,6 +11,7 @@ COPY ["BookingTablesAPI/BookingTablesAPI.csproj", "BookingTablesAPI/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 COPY ["Core/Core.csproj", "Core/"]
 COPY ["SharedAssembly/Shared.csproj", "SharedAssembly/"]
+COPY ["Tests/Tests.csproj","Tests/"]
 RUN dotnet restore "BookingTablesAPI/BookingTablesAPI.csproj"
 COPY . .
 WORKDIR "/src/BookingTablesAPI"
