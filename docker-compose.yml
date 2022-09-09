@@ -9,16 +9,36 @@ services:
      environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=sa;Password=aurum123ILIKE
+      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKE
      ports:
       - "80"
       - "443"
      depends_on:
       - bookingtablesapi-db
+      - cache
+     links:
+     - "cache"
+
   bookingtablesapi-db:
-   image: mcr.microsoft.com/mssql/server:2019-latest
-   environment:
+     image: mcr.microsoft.com/mssql/server:2019-latest
+     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=aurum123ILIKE   
-   ports:
-      - "1433"
+     ports:
+      - 1433:1433
+     container_name: sqlDatabase
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+     - 6379:6379
+    container_name: redis
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+     - 5672:5672
+     - 15672:15672
+    container_name: rabbit
+
+
+     

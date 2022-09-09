@@ -2,7 +2,6 @@
 using Core.DTOs;
 using Core.IServices;
 using Core.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookingTablesAPI.Controllers

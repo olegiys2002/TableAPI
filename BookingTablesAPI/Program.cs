@@ -1,10 +1,7 @@
 using BookingTablesAPI.ServiceExtensions;
 using BookingTablesAPI.ServicesConfiguration;
-using BookingTablesAPI.Validation.Order;
-using Core.Models.Cache;
 using Core.Services;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +28,7 @@ builder.Services.ConfigureRedis(builder.Configuration);
 
 var app = builder.Build();
 
+app.MigrateDatabase();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
