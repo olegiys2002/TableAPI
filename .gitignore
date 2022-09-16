@@ -24,7 +24,7 @@ mono_crash.*
 .vscode/
 secrets/
 data/
-
+data/.system
 appsettings.json
 appsettings.Development.json
 
