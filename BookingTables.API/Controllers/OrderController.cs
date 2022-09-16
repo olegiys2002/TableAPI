@@ -1,5 +1,4 @@
 ﻿using BookingTables.API.Controllers;
-using BookingTablesAPI.Filters;
 using Core.DTOs;
 using Core.IServices;
 using Core.Models.Request;
@@ -19,7 +18,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="OrderById")]
-        [ValidationFilter]
+
         public async Task<IActionResult> GetOrder(int id)
         {
            var orderDTO = await  _orderService.GetOrderAsync(id);
@@ -34,7 +33,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
-        [ValidationFilter]
+     
         public async Task<IActionResult> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             var orderDTO = await _orderService.CreateOrderAsync(orderForCreationDTO);
@@ -42,7 +41,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [ValidationFilter]
+
         public async Task<IActionResult> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
             var updatedOrder = await _orderService.UpdateOrderAsync(id, orderForUpdatingDTO);
@@ -50,7 +49,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ValidationFilter]
+
         public async Task<IActionResult> DeleteOrder(int id)
         {
             var orderId = await _orderService.DeleteOrderAsync(id);

@@ -1,4 +1,4 @@
-﻿using BookingTablesAPI.Filters;
+﻿
 using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Authorization;
@@ -25,7 +25,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="UserById")]
-        [ValidationFilter]
+
         public async Task<IActionResult> GetUserById(int id)
         {
             var userDTO = await _userService.GetUserByIdAsync(id);
@@ -41,7 +41,6 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
-        [ValidationFilter]
         [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromForm]UserFormDTO trys)
         {
@@ -50,7 +49,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [ValidationFilter]
+
         public async Task<IActionResult> UpdateUser(int id ,[FromForm] UserFormDTO userForUpdatingDTO)
         {
             var updatedUser = await _userService.UpdateUserAsync(id,userForUpdatingDTO);
@@ -58,7 +57,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ValidationFilter]
+
         public async Task<IActionResult> DeleteUser(int id)
         {
            var userId = await _userService.DeleteUserAsync(id);

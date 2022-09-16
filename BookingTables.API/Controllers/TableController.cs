@@ -1,5 +1,4 @@
-﻿using BookingTablesAPI.Filters;
-using Core.Commands;
+﻿using Core.Commands;
 using Core.DTOs;
 using Core.IServices;
 using Core.Queries;
@@ -23,7 +22,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="tableById")]
-        [ValidationFilter]
+       
         public async Task<IActionResult> GetTable(int id)
         {
             var tableDTO = await _mediator.Send(new GetTableQuery(id));
@@ -43,7 +42,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost("collection")]
-        [ValidationFilter]
+      
         public async Task<IActionResult> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
         {
            var tables = await _tableService.CreateCollectionOfTablesAsync(tableFormDTOs);
@@ -59,7 +58,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
-        [ValidationFilter]
+        
         public async Task<IActionResult> CreateTable(TableFormDTO tableForCreationDTO)
         {
             var tableDTO = await _mediator.Send(new AddTableCommand(tableForCreationDTO));
@@ -69,7 +68,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        [ValidationFilter]
+        
         public async Task<IActionResult> UpdateTable(int id, TableFormDTO tableForUpdatingDTO)
         {
             var updatedTable = await _mediator.Send(new UpdateTableCommand(tableForUpdatingDTO,id));
@@ -78,7 +77,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        [ValidationFilter]
+      
         public async Task<IActionResult> DeleteTable(int id)
         {
             var tableId = await _tableService.DeleteTableAsync(id);
