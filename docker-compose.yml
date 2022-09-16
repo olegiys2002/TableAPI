@@ -5,7 +5,7 @@ services:
      image: ${DOCKER_REGISTRY-}bookingtablesapi
      build:
       context: .
-      dockerfile: BookingTablesAPI/Dockerfile
+      dockerfile: BookingTables.API/Dockerfile
      environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -27,18 +27,41 @@ services:
      ports:
       - 1433:1433
      container_name: sqlDatabase
+
   cache:
     image: redis:latest
     restart: always
     ports:
      - 6379:6379
     container_name: redis
+
   rabbitmq:
     image: rabbitmq:3-management
     ports:
      - 5672:5672
      - 15672:15672
     container_name: rabbit
+    restart: always
+
+  emailsender:
+    build:
+      context: ./../EmailSender/
+      dockerfile: ./../EmailSender/EmailSender/Dockerfile
+    depends_on:
+     - rabbitmq
+     - emailsender-db
+    ports:
+    - 5070:80
+    container_name: emailsender
+  
+  emailsender-db:
+   image: mongo
+   ports:
+      - 27017:80
+   container_name: mongo
+
+  
+    
 
 
      

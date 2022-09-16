@@ -20,7 +20,13 @@ mono_crash.*
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
+.git/
+.vscode/
+secrets/
+data/
 
+appsettings.json
+appsettings.Development.json
 
 # Build results
 [Dd]ebug/
