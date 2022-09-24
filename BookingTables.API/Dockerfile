@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["BookingTables.API/BookingTables.API.csproj", "BookingTables.API/"]
 COPY ["BookingTables.Core/BookingTables.Core.csproj", "BookingTables.Core/"]
 COPY ["BookingTables.Infrastructure/BookingTables.Infrastructure.csproj", "BookingTables.Infrastructure/"]
-COPY ["../BookingTables.Models/BookingTables.Models.csproj", "../BookingTables.Models/"]
+COPY ["BookingTables.Models/BookingTables.Models.csproj", "BookingTables.Models/"]
 COPY ["BookingTables.SharedAssembly/BookingTables.Shared.csproj", "BookingTables.SharedAssembly/"]
 RUN dotnet restore "BookingTables.API/BookingTables.API.csproj"
 COPY . .

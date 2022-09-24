@@ -53,7 +53,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> UpdateUser(int id ,[FromForm] UserFormDTO userForUpdatingDTO)
         {
             var updatedUser = await _userService.UpdateUserAsync(id,userForUpdatingDTO);
-            return updatedUser == null ? Ok(updatedUser) : NotFound();
+            return updatedUser != null ? Ok(updatedUser) : NotFound();
         }
 
         [HttpDelete("{id}")]
@@ -61,7 +61,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> DeleteUser(int id)
         {
            var userId = await _userService.DeleteUserAsync(id);
-           return userId == null ? Ok(userId) : NotFound();
+           return userId != null ? Ok(userId) : NotFound();
         }
     }
 }

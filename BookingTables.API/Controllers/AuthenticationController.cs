@@ -1,5 +1,4 @@
-﻿using BookingTablesAPI.Filters;
-using Core.DTOs;
+﻿using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +17,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost("login")]
-        [ValidationFilter]
+     
         public async Task<IActionResult> Authenticate(UserForAuthenticationDTO userAuth)
         {
           var user =  await _authenticationManager.ValidateUserAsync(userAuth);
