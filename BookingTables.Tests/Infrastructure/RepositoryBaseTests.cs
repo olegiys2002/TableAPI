@@ -1,14 +1,7 @@
-﻿using Core.IServices.IRepositories;
-using Core.Models;
-using FakeItEasy;
-using Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using FakeItEasy;
+using Infrastructure.IRepositories;
+using Models.Models;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.Tests
@@ -23,13 +16,13 @@ namespace Infrastructure.Tests
             var userList = new List<User>
             {
                 user
-            }.AsQueryable();
+            };
 
             var mockRepo = new Mock<IRepositoryBase<User>>();
-            mockRepo.Setup(ex => ex.FindAll(false)).Returns(userList);
-            IQueryable<User> users = mockRepo.Object.FindAll(false);
+            mockRepo.Setup(ex => ex.FindAllAsync(false)).Returns(Task.FromResult(userList));
+            var users =(mockRepo.Object.FindAllAsync(false));
 
-            Assert.True(users.Count() >= 1);
+            Assert.True(users.Result.Count >= 1);
         }
 
         [Fact]

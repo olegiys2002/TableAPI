@@ -18,7 +18,7 @@ WORKDIR "/src/BookingTables.API"
 RUN dotnet build "BookingTables.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BookingTables.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "BookingTables.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

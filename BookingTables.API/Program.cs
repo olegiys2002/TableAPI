@@ -41,7 +41,7 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapControllers() ;
 app.MapHub<OnlineAssistant>("/assistant");
 
 app.Run();

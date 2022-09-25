@@ -20,6 +20,7 @@ namespace BookingTablesAPI.ServicesConfiguration
             serviceCollection.AddMediatR(AppDomain.CurrentDomain.Load("BookingTables.Core"));
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddSignalR();
+            serviceCollection.AddRouting(opt => opt.LowercaseUrls = true);
 
         }
     }
