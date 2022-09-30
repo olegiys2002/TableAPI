@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models.Models;
-
+using Shared.RepositoriesExtensions;
+using Shared.RequestModels;
 
 namespace Infrastructure.Repositories
 {
-    public class EntityRepository<T> : RepositoryBase<T> where T : Entity
+    public class EntityRepository<T,K> : RepositoryBase<T,K> where T : Entity
+                                                             where K : RequestFeatures
     {
         public EntityRepository(ApplicationContext applicationContext) : base(applicationContext)
         {
@@ -24,9 +26,11 @@ namespace Infrastructure.Repositories
             dataSet.Update(entity);
         }
 
-        public override Task<List<T>> FindAllAsync(bool trackChanges)
+        public override Task<List<T>> FindAllAsync(bool trackChanges,K requestFeatures)
         {
-            return !trackChanges ? dataSet.AsNoTracking().ToListAsync() : dataSet.ToListAsync();
+            return !trackChanges ? dataSet.AsNoTracking().GetPage(requestFeatures.PageNumber, requestFeatures.PageSize).ToListAsync() :
+                                   dataSet.GetPage(requestFeatures.PageNumber, requestFeatures.PageSize).ToListAsync();
         }
+      
     }
 }

@@ -1,272 +1,262 @@
-﻿//using AutoMapper;
-//using Core.DTOs;
-//using Core.IServices;
-//using Core.Models;
-//using Core.Services;
-//using Microsoft.EntityFrameworkCore;
-//using Moq;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Xunit;
-//using Infrastructure.TestExtensions;
-//using Microsoft.AspNetCore.Http;
-//using Models.Models;
+﻿using AutoMapper;
+using Core.DTOs;
+using Core.IServices;
+using Core.Services;
+using Moq;
+using Xunit;
+using Infrastructure.TestExtensions;
+using Microsoft.AspNetCore.Http;
+using Models.Models;
 
-//namespace Tests.Services
-//{
-//    public class OrderServiceTests
-//    {
-//        private readonly Mock<IMapper> _mapper = new Mock<IMapper>();
-//        private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();
-//        private readonly Mock<IHttpContextAccessor> _http = new Mock<IHttpContextAccessor>();
-//        private readonly Mock<IRabbitMqService> _rabbitMq = new Mock<IRabbitMqService>();
-//=
-//        [Fact]
-//        public async Task OrderService_CreateOrder_Return()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
+namespace Tests.Services
+{
+    public class OrderServiceTests
+    {
+        private readonly Mock<IMapper> _mapper = new Mock<IMapper>();
+        private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();
+        private readonly Mock<IHttpContextAccessor> _http = new Mock<IHttpContextAccessor>();
+        private readonly Mock<IRabbitMqService> _rabbitMq = new Mock<IRabbitMqService>();
+        private readonly List<int> _tableDTOs = new List<int>
+        {
+            0,
+            1,
+            2
+        };
+        private readonly List<Table> _tables = new();
+        [Fact]
+        public async Task OrderService_CreateOrder_Return()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
 
-            
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var quary = order.Table.AsAsyncQueryable();
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            _unitOfWork.Setup(rep =>rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(quary);
-//            _unitOfWork.Setup(rep => rep.OrderRepository.Create(order));
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object,_http.Object,_rabbitMq.Object);
-            
-//            var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
+            var quary = order.Table.AsAsyncQueryable();
 
-//            Assert.NotNull(createdOrder);
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
+            _unitOfWork.Setup(rep => rep.OrderRepository.Create(order));
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//        }
-//        [Fact]
-//        public async Task OrderService_CreateOrder_TableNullReturn()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            order.Table = new List<Table>();
+            var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            Assert.NotNull(createdOrder);
 
-            
-//            var quary = order.Table.AsAsyncQueryable();
+        }
+        [Fact]
+        public async Task OrderService_CreateOrder_TableNullReturn()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            order.Table = new List<Table>();
 
-//            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIds(orderForCreation.TablesId, true)).Returns(quary);
-           
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var createdOrder = await orderService.CreateOrder(orderForCreation);
 
-//            Assert.Null(createdOrder);
-//        }
-//        [Fact]
-//        public async Task OrderService_CreateOrder_CountOfSeatsNullReturn()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            orderForCreation.CountOfPeople = 100;
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
 
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//            var quary = order.Table.AsAsyncQueryable();
+            var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
-//            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIds(orderForCreation.TablesId, true)).Returns(quary);
+            Assert.Null(createdOrder);
+        }
+        [Fact]
+        public async Task OrderService_CreateOrder_CountOfSeatsNullReturn()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            orderForCreation.CountOfPeople = 100;
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var createdOrder = await orderService.CreateOrder(orderForCreation);
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
 
-//            Assert.Null(createdOrder);
-//        }
-//        [Fact]
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//        public async Task OrderService_DeleteOrder_True()
-//        {
-//            var id = new int();
-//            var order = GetTestOrder();
-//            _unitOfWork.Setup(or => or.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
+            var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
-//            var result = await orderService.DeleteOrder(id);
+            Assert.Null(createdOrder);
+        }
+        [Fact]
 
-//            Assert.True(result);
-//        }
-//        [Fact]
-//        public async Task OrderService_DeleteOrder_False()
-//        {
-//            var id = new int();
-//            Order order = null;
-//            _unitOfWork.Setup(or => or.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
+        public async Task OrderService_DeleteOrder_NotNull()
+        {
+            var id = new int();
+            var order = GetTestOrder();
+            _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
-//            var result = await orderService.DeleteOrder(id);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
+            var result = await orderService.DeleteOrderAsync(id);
 
-//            Assert.False(result);
-//        }
-//        [Fact]
-//        public async Task OrderService_GetOrder()
-//        {
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            var id = new int();
-//            _unitOfWork.Setup(or => or.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            Assert.NotNull(result);
+        }
+        [Fact]
+        public async Task OrderService_DeleteOrder_Null()
+        {
+            var id = new int();
+            Order order = null;
+            _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-//            var orderService = new OrderService(_mapper.Object,_unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
-//            var result = await orderService.GetOrder(id);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
+            var result = await orderService.DeleteOrderAsync(id);
 
-//            Assert.IsType<OrderDTO>(result);
-//        }
-//        [Fact]
-//        public async Task OrderService_GetOrder_NullResult()
-//        {
-//            Order order = null;
-//            var orderDTO = new OrderDTO();
-//            var id = new int();
-//            _unitOfWork.Setup(or => or.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            Assert.Null(result);
+        }
+        [Fact]
+        public async Task OrderService_GetOrder()
+        {
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            var id = new int();
+            _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
-//            var result = await orderService.GetOrder(id);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
+            var result = await orderService.GetOrderAsync(id);
 
-//            Assert.Null(order);
-//        }
-//        [Fact]
-//        public async Task OrderService_UpdateOrder_Return()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            var id = new int();
+            Assert.IsType<OrderDTO>(result);
+        }
+        [Fact]
+        public async Task OrderService_GetOrder_NullResult()
+        {
+            Order order = null;
+            var orderDTO = new OrderDTO();
+            var id = new int();
+            _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
+            var result = await orderService.GetOrderAsync(id);
 
-//            var quary = order.Table.AsAsyncQueryable();
+            Assert.Null(order);
+        }
+        [Fact]
+        public async Task OrderService_UpdateOrder_Return()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            var id = new int();
 
-//            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIds(orderForCreation.TablesId, true)).Returns(quary);
-//            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
+            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-//            var createdOrder = await orderService.UpdateOrder(id,orderForCreation);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//            Assert.True(createdOrder);
+            var createdOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
+            Assert.NotNull(createdOrder);
 
-//        }
-//        [Fact]
-//        public async Task OrderService_UpdateOrder_FalseTables()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            var id = new int();
-//            order.Table = new List<Table>();
+        }
+        [Fact]
+        public async Task OrderService_UpdateOrder_FalseTables()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            var id = new int();
+            order.Table = new List<Table>();
 
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var quary = order.Table.AsAsyncQueryable();
+            var quary = order.Table.AsAsyncQueryable();
 
-//            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIds(orderForCreation.TablesId, true)).Returns(quary);
-//            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult((order.Table)));
+            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//            var updatedOrder = await orderService.UpdateOrder(id, orderForCreation);
+            var updatedOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
 
-//            Assert.False(updatedOrder);
+            Assert.Null(updatedOrder);
 
-//        }
-//        [Fact]
-//        public async Task OrderService_UpdateOrder_FalseCountOfSeats()
-//        {
-//            var orderForCreation = GetOrderFormDTO();
-//            var order = GetTestOrder();
-//            var orderDTO = new OrderDTO();
-//            var id = new int();
-//            orderForCreation.CountOfPeople = 100;
+        }
+        [Fact]
+        public async Task OrderService_UpdateOrder_FalseCountOfSeats()
+        {
+            var orderForCreation = GetOrderFormDTO();
+            var order = GetTestOrder();
+            var orderDTO = new OrderDTO();
+            var id = new int();
+            orderForCreation.CountOfPeople = 100;
 
-//            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
-//            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
+            _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
+            _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-//            var quary = order.Table.AsAsyncQueryable();
+            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
+            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-//            _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIds(orderForCreation.TablesId, true)).Returns(quary);
-//            _unitOfWork.Setup(rep => rep.OrderRepository.GetOrder(It.IsAny<int>())).Returns(Task.FromResult(order));
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object);
 
-//            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _rabbitMq.Object, _jwtService.Object);
+            var updatedOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
 
-//            var updatedOrder = await orderService.UpdateOrder(id, orderForCreation);
+            Assert.Null(updatedOrder);
 
-//            Assert.False(updatedOrder);
+        }
+        public async Task OrderService_GetOrders()
+        {
+            var order = GetTestOrder();
+            var orderList = new List<Order>() { order };
 
-//        }
-//        public async Task OrderService_GetOrders()
-//        {
-//           var order =  GetTestOrder();
-//           var orderList = new List<Order>() { order};
-         
-//        }
+        }
 
-//        public Order GetTestOrder()
-//        {
-//            var order = new Order()
-//            {
-//                CountOfPeople = 6,
-//                CreatedAt = DateTime.Now,
-//                UpdatedAt = DateTime.Now,
-//                DateOfReservation = DateTime.Now,
+        public Order GetTestOrder()
+        {
+            var order = new Order()
+            {
+                CountOfPeople = 6,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                DateOfReservation = DateTime.Now,
 
-//            };
-//            var tables = new List<Table>();
-//            var table = new Table()
-//            {
-//                CountOfSeats = 3,
-//                CreatedAt = DateTime.Now,
-//                UpdatedAt = DateTime.Now,
-//                Number = 3,
-//            };
-//            var table1 = new Table()
-//            {
-//                CountOfSeats = 4,
-//                CreatedAt = DateTime.Now,
-//                UpdatedAt = DateTime.Now,
-//                Number = 3,
-//            };
-//            var table2 = new Table()
-//            {
-//                CountOfSeats = 5,
-//                CreatedAt = DateTime.Now,
-//                UpdatedAt = DateTime.Now,
-//                Number = 3,
-//            };
-//            tables.Add(table);
-//            tables.Add(table1);
-//            tables.Add(table2);
-//            order.Table = tables;
-//            return order;
-//        }
-//        public OrderFormDTO GetOrderFormDTO()
-//        {
-//            var orderForCreation = new OrderFormDTO()
-//            {
-//                CountOfPeople = 6,
-//                DateOfReservation = DateTime.Now,
-//                TablesId = new List<int>() { 0, 1, 2 }
-//            };
-//            return orderForCreation;
-//        }
-//    }
-//}
+            };
+            var tables = new List<Table>();
+            var table = new Table()
+            {
+                CountOfSeats = 3,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Number = 3,
+            };
+            var table1 = new Table()
+            {
+                CountOfSeats = 4,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Number = 3,
+            };
+            var table2 = new Table()
+            {
+                CountOfSeats = 5,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Number = 3,
+            };
+            tables.Add(table);
+            tables.Add(table1);
+            tables.Add(table2);
+            order.Table = tables;
+            return order;
+        }
+        public OrderFormDTO GetOrderFormDTO()
+        {
+            var orderForCreation = new OrderFormDTO()
+            {
+                CountOfPeople = 6,
+                DateOfReservation = DateTime.Now,
+                TablesId = _tableDTOs
+            };
+            return orderForCreation;
+        }
+    }
+}

@@ -1,11 +1,10 @@
 ﻿using Models.Models;
-
+using Shared.RequestModels;
 
 namespace Infrastructure.IRepositories
 {
-    public interface IOrderRepository : IEntityRepository<Order>
+    public interface IOrderRepository : IEntityRepository<Order,OrderRequest>
     {
         Task<Order> GetOrderAsync(int id);
-        Task<List<Order>> GetOrderPageAsync(int pageNumber, int pageSize);
     }
 }

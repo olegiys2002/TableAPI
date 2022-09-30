@@ -5,6 +5,8 @@ using SharedAssembly;
 using Shared;
 using User = Models.Models.User;
 using Models.Models;
+using Shared.RequestModels;
+using BookingTables.Infrastructure.Views;
 
 namespace Core.Services
 {
@@ -95,14 +97,14 @@ namespace Core.Services
             return userDTO;
         }
 
-        public async Task<List<UserDTO>> GetUsersAsync()
+        public async Task<List<UserDTO>> GetUsersAsync(UserRequest userRequest)
         {
 
             var users = await _cacheService.TryGetCache(_userKeyCaching);
             
             if (users == null)
             {
-                users = await _unitOfWork.UserRepository.FindAllAsync(false);
+                users = await _unitOfWork.UserRepository.FindAllAsync(false,userRequest);
 
                 if (users.Count == 0)
                 {
@@ -127,6 +129,10 @@ namespace Core.Services
 
            var avatarDTO = _mapper.Map<AvatarDTO>(avatar);
            return avatarDTO;
+        }
+        public Task<List<UserAvatars>> GetUserIdWithAvatar()
+        {
+           return _unitOfWork.UserRepository.GetAvatarsWihtUserId();
         }
         public async Task<UserDTO> UpdateUserAsync(int id,UserFormDTO userForUpdatingDTO)
         {

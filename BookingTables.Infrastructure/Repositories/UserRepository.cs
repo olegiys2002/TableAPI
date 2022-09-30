@@ -1,10 +1,12 @@
-﻿using Infrastructure.IRepositories;
+﻿using BookingTables.Infrastructure.Views;
+using Infrastructure.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Models.Models;
+using Shared.RequestModels;
 
 namespace Infrastructure.Repositories
 {
-    public class UserRepository : EntityRepository<User>,IUserRepository
+    public class UserRepository : EntityRepository<User,UserRequest>,IUserRepository
     {
      
         public UserRepository(ApplicationContext applicationContext) : base(applicationContext)
@@ -24,6 +26,10 @@ namespace Infrastructure.Repositories
         {
             var avatar = await _applicationContext.Users.Include(user=>user.Avatar).FirstOrDefaultAsync(user=>user.Id == id );
             return avatar.Avatar;
+        }
+        public Task<List<UserAvatars>> GetAvatarsWihtUserId()
+        {
+            return _applicationContext.UserAvatars.ToListAsync();
         }
     }
 }

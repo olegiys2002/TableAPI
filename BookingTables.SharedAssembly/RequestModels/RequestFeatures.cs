@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BookingTables.Shared.SortModels;
 
-namespace Core.Models
+namespace Shared.RequestModels
 {
     public abstract class RequestFeatures
     {
         public int PageNumber { get; set; } = 1;
         private int _pageSize = 10;
         const int maxPageSize = 50;
-
         public int PageSize
         {
             get
@@ -23,5 +18,6 @@ namespace Core.Models
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+        public SortModel [] SortModel { get; set; }
     }
 }

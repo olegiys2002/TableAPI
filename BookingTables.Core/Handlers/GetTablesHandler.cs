@@ -20,7 +20,7 @@ namespace Core.Handlers
         }
         public async Task<IEnumerable<TableDTO>> Handle(GetTablesQuery request, CancellationToken cancellationToken)
         {
-            var tables = await _unitOfWork.TableRepository.FindAllAsync(false);
+            var tables = await _unitOfWork.TableRepository.FindAllAsync(false,request.TableRequest);
             var tablesDTO = _mapper.Map<List<TableDTO>>(tables);
             return tablesDTO;
 

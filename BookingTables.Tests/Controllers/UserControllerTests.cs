@@ -3,23 +3,25 @@ using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Shared.RequestModels;
 using Xunit;
 
 namespace API.Tests
 {
     public class UserControllerTests
     {
-        private readonly Mock<IUserService> _userService = new Mock<IUserService>();
-
+        private readonly Mock<IUserService> _userService = new ();
+        private readonly Mock<UserRequest> userRequest = new ();
         [Fact]
         public async Task UserController_GetUsers_ReturnOk()
         {
-        
+
             var usersDTOs = new Mock<List<UserDTO>>();
-            _userService.Setup(us => us.GetUsersAsync()).Returns(Task.FromResult(usersDTOs.Object));
+            
+            _userService.Setup(us => us.GetUsersAsync(userRequest.Object)).Returns(Task.FromResult(usersDTOs.Object));
             var userController = new UserController(_userService.Object);
 
-            var result  = await userController.GetUsers();
+            var result = await userController.GetUsers(userRequest.Object);
 
             Assert.IsType<OkObjectResult>(result as OkObjectResult);
         }
@@ -29,15 +31,15 @@ namespace API.Tests
         {
             var usersDTOs = new List<UserDTO>();
             usersDTOs = null;
-            _userService.Setup(us => us.GetUsersAsync()).Returns(Task.FromResult(usersDTOs));
+            _userService.Setup(us => us.GetUsersAsync(userRequest.Object)).Returns(Task.FromResult(usersDTOs));
             var userController = new UserController(_userService.Object);
 
-            var result = await userController.GetUsers();
+            var result = await userController.GetUsers(userRequest.Object);
 
             Assert.IsType<NotFoundResult>(result as NotFoundResult);
         }
 
-        [Fact] 
+        [Fact]
 
         public async Task UserController_GetUserById_Ok()
         {

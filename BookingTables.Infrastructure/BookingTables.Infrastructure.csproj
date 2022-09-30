@@ -18,10 +18,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.20" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\BookingTables.Models\BookingTables.Models.csproj" />
+    <ProjectReference Include="..\BookingTables.SharedAssembly\BookingTables.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Core.DTOs;
 using Core.IServices;
-using Core.Models.Request;
 using Microsoft.AspNetCore.Http;
 using Models.Models;
+using Shared.RequestModels;
 using System.Security.Claims;
 
 namespace Core.Services
@@ -84,9 +84,9 @@ namespace Core.Services
             return orderDTO;
         }
 
-        public async Task<List<OrderDTO>> GetOrdersAsync(OrderRequestFeatures orderRequest)
+        public async Task<List<OrderDTO>> GetOrdersAsync(OrderRequest orderRequest)
         {
-            var orders = await _unitOfWork.OrderRepository.GetOrderPageAsync(orderRequest.PageNumber,orderRequest.PageSize);
+            var orders = await _unitOfWork.OrderRepository.FindAllAsync(false,orderRequest);
 
             if (orders.Count == 0)
             {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Models.JWT
+﻿namespace Core.Models.JWT
 {
     public class JwtSettingsOptions
     {

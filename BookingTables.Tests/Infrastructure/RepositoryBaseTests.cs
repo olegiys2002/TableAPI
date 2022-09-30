@@ -2,12 +2,14 @@
 using Infrastructure.IRepositories;
 using Models.Models;
 using Moq;
+using Shared.RequestModels;
 using Xunit;
 
 namespace Infrastructure.Tests
 {
     public class RepositoryBaseTests
     {
+        private readonly Mock<RequestFeatures> _requestFeaturesMock = new Mock<RequestFeatures>();
         [Fact]
         public void RepositoryBase_FindAll()
         {
@@ -18,9 +20,9 @@ namespace Infrastructure.Tests
                 user
             };
 
-            var mockRepo = new Mock<IRepositoryBase<User>>();
-            mockRepo.Setup(ex => ex.FindAllAsync(false)).Returns(Task.FromResult(userList));
-            var users =(mockRepo.Object.FindAllAsync(false));
+            var mockRepo = new Mock<IRepositoryBase<User,RequestFeatures>>();
+            mockRepo.Setup(ex => ex.FindAllAsync(false,_requestFeaturesMock.Object)).Returns(Task.FromResult(userList));
+            var users = (mockRepo.Object.FindAllAsync(false, _requestFeaturesMock.Object));
 
             Assert.True(users.Result.Count >= 1);
         }
@@ -29,7 +31,7 @@ namespace Infrastructure.Tests
         public void RepositoryBase_Add()
         {
             var user = GetTestProduct();
-            var mockRepo = new Mock<IRepositoryBase<User>>();
+            var mockRepo = new Mock<IRepositoryBase<User,RequestFeatures>>();
             mockRepo.Setup(us => us.Create(user)).Verifiable();
 
             mockRepo.Object.Create(user);
@@ -40,7 +42,7 @@ namespace Infrastructure.Tests
         public void RepositoryBase_Update()
         {
             var user = GetTestProduct();
-            var mockRepo = new Mock<IRepositoryBase<User>>();
+            var mockRepo = new Mock<IRepositoryBase<User,RequestFeatures>>();
             mockRepo.Setup(us => us.Update(user)).Verifiable();
 
             mockRepo.Object.Update(user);
@@ -51,7 +53,7 @@ namespace Infrastructure.Tests
         public void RepositoryBase_Delete()
         {
             var user = GetTestProduct();
-            var mockRepo = new Mock<IRepositoryBase<User>>();
+            var mockRepo = new Mock<IRepositoryBase<User,RequestFeatures>>();
             mockRepo.Setup(us => us.Delete(user)).Verifiable();
 
             mockRepo.Object.Delete(user);
@@ -61,6 +63,7 @@ namespace Infrastructure.Tests
         public User GetTestProduct()
         {
             Mock<Avatar> avatar = new Mock<Avatar>();
+           
             User user = new User()
             {
                 Id = 1,

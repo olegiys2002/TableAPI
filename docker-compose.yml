@@ -8,10 +8,11 @@ services:
       dockerfile: BookingTables.API/Dockerfile
      environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      #- ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKE
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      #- ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKE
+      - ConnectionString="server=host.docker.internal;database=BookingTableApp;Integrated Security=false;User Id=sa;Password=aurum123ILIKE"
      ports:
-      - "5080:80"
+      - "5050:443"
      depends_on:
       #- bookingtablesapi-db
       - cache

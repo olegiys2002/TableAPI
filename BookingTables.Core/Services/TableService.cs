@@ -4,6 +4,7 @@ using Core.IServices;
 using FireSharp.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Models.Models;
+using Shared.RequestModels;
 
 namespace Core.Services
 {
@@ -73,9 +74,9 @@ namespace Core.Services
             return tableDTO;
         }
 
-        public async Task<List<TableDTO>> GetTablesAsync()
+        public async Task<List<TableDTO>> GetTablesAsync(TableRequest tableRequest)
         {
-            var tables = await _unitOfWork.TableRepository.FindAllAsync(false);
+            var tables = await _unitOfWork.TableRepository.FindAllAsync(false,tableRequest);
             var tablesDTOs = _mapper.Map<List<TableDTO>>(tables);
 
             return tablesDTOs;

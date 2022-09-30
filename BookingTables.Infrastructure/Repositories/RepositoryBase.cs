@@ -1,10 +1,12 @@
 ﻿using Infrastructure.IRepositories;
 using Microsoft.EntityFrameworkCore;
-
+using Shared.RepositoriesExtensions;
+using Shared.RequestModels;
 
 namespace Infrastructure
 {
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    public abstract class RepositoryBase<T,K> : IRepositoryBase<T,K> where T : class
+                                                                     where K : RequestFeatures   
     {
         protected ApplicationContext _applicationContext;
         protected DbSet<T> dataSet;
@@ -23,9 +25,10 @@ namespace Infrastructure
             dataSet.Remove(entity);
         }
 
-        public virtual Task<List<T>> FindAllAsync(bool trackChanges)
+        public virtual Task<List<T>> FindAllAsync(bool trackChanges,K requestFeatures)
         {
-            return !trackChanges ? dataSet.AsNoTracking().ToListAsync() :  dataSet.ToListAsync();
+            return !trackChanges ? dataSet.GetPage(requestFeatures.PageNumber,requestFeatures.PageSize).AsNoTracking().ToListAsync():  
+                                   dataSet.GetPage(requestFeatures.PageNumber, requestFeatures.PageSize).ToListAsync();
         }
         public virtual void Update(T entity)
         {
