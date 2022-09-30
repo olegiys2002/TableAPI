@@ -4,7 +4,7 @@ using Core.IServices;
 using Core.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-
+using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -27,16 +27,15 @@ namespace BookingTablesAPI.Controllers
         {
             var tableDTO = await _mediator.Send(new GetTableQuery(id));
 
-            
             //TableDTO tableDTO = await _tableService.GetTableById(id);
 
             return tableDTO == null ? NotFound() : Ok(tableDTO);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTables()
+        [HttpPut]
+        public async Task<IActionResult> GetTables(TableRequest? tableRequest)
         {
-            var tablesDTOs = await _mediator.Send(new GetTablesQuery());
+            var tablesDTOs = await _mediator.Send(new GetTablesQuery(tableRequest));
             //List<TableDTO> tableDTOs = await _tableService.GetTables();
             return tablesDTOs == null ? NotFound() : Ok(tablesDTOs); 
         }
@@ -50,7 +49,7 @@ namespace BookingTablesAPI.Controllers
            return tables == null ? BadRequest() : CreatedAtRoute("Collection", new { ids }, tables);
         }
 
-        [HttpPost("collection/({ids})",Name ="Collection")]
+        [HttpPut("collection",Name ="Collection")]
         public async Task<IActionResult> GetCollectionOfTables(IEnumerable<int> ids)
         {
            var tablesDTOs =  await _tableService.GetTablesByIdAsync(ids);

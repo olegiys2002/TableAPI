@@ -1,8 +1,8 @@
-﻿
-using Core.DTOs;
+﻿using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -18,9 +18,9 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromQuery] UserRequest userRequest)
         {
-            var userDTOs = await _userService.GetUsersAsync();
+            var userDTOs = await _userService.GetUsersAsync(userRequest);
             return userDTOs == null ? NotFound() : Ok(userDTOs);
         }
 
@@ -62,6 +62,11 @@ namespace BookingTablesAPI.Controllers
         {
            var userId = await _userService.DeleteUserAsync(id);
            return userId != null ? Ok(userId) : NotFound();
+        }
+        [HttpPut]
+        public async Task<IActionResult> GetUsersAvatar()
+        {
+            return Ok(await _userService.GetUserIdWithAvatar());
         }
     }
 }

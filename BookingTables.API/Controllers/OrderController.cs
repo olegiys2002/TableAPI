@@ -1,8 +1,8 @@
 ﻿using BookingTables.API.Controllers;
 using Core.DTOs;
 using Core.IServices;
-using Core.Models.Request;
 using Microsoft.AspNetCore.Mvc;
+using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -26,7 +26,7 @@ namespace BookingTablesAPI.Controllers
         }
   
         [HttpGet]
-        public async Task<IActionResult> GetOrders([FromQuery] OrderRequestFeatures orderRequest)
+        public async Task<IActionResult> GetOrders([FromQuery] OrderRequest orderRequest)
         {
             var orderDTOs = await _orderService.GetOrdersAsync(orderRequest);
             return orderDTOs == null ? NotFound() : Ok(orderDTOs);

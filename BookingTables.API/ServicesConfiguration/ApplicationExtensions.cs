@@ -21,6 +21,8 @@ namespace BookingTablesAPI.ServicesConfiguration
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddSignalR();
             serviceCollection.AddRouting(opt => opt.LowercaseUrls = true);
+            
+            
 
         }
     }
