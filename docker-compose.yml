@@ -9,6 +9,8 @@ services:
      environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=aurum123LIKE
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       #- ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKE
       - ConnectionString="server=host.docker.internal;database=BookingTableApp;Integrated Security=false;User Id=sa;Password=aurum123ILIKE"
      ports:
@@ -16,8 +18,13 @@ services:
      depends_on:
       #- bookingtablesapi-db
       - cache
+      - rabbitmq
+      - identity
      links:
      - "cache"
+     volumes:
+      - ~/.aspnet/https:/https:ro
+
 
   #bookingtablesapi-db:
   #   image: mcr.microsoft.com/mssql/server:2019-latest
@@ -53,12 +60,30 @@ services:
     ports:
     - 5070:80
     container_name: emailsender
+
+  identity:
+    image: ${DOCKER_REGISTRY-}identity
+    ports:
+      - 5090:443
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=aurum123LIKE
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    build:
+      context: ./../Identity/
+      dockerfile: ./../Identity/Identity/Dockerfile
+    container_name: identity
+    volumes:
+      - ~/.aspnet/https:/https:ro
   
   emailsender-db:
    image: mongo
    ports:
       - 27017:80
    container_name: mongo
+   depends_on: 
+   - rabbitmq
 
   booking-table-front:
    build:
@@ -68,7 +93,38 @@ services:
    ports:
      - 80:80
 
+  elasticsearch:
+   container_name: elasticsearch
+   image: elasticsearch:8.4.3
+   ports:
+    - 9200:9200
+   volumes:
+    - esdata:/usr/share/elasticsearch/data
+   environment:
+    - xpack.monitoring.templates.enabled=true
+    - xpack.monitoring.templates.enabled=false
+    - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    - discovery.type=single-node
+    - xpack.security.enabled=false
+
+
+  kibana:
+   container_name: kibana
+   image: kibana:8.4.3
+   ports:
+    - 5601:5601
+   depends_on:
+    - elasticsearch
+   environment:
+    - ELASTICSEARCH_URL=http://localhost:9200
+
+
   
+volumes:
+    esdata:
+        driver: local
+
+
     
 
 

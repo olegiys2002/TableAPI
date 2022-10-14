@@ -7,6 +7,7 @@ using User = Models.Models.User;
 using Models.Models;
 using Shared.RequestModels;
 using BookingTables.Infrastructure.Views;
+using Nest;
 
 namespace Core.Services
 {
@@ -17,14 +18,16 @@ namespace Core.Services
         private readonly IStorage _storage;
         private readonly ICacheService<List<User>> _cacheService;
         private readonly ICacheService<User> _cacheUserService;
+        private readonly IElasticClient _elasticClient;
         private readonly string _userKeyCaching="userCache";
-        public UserService(IUnitOfWork unitOfWork,IMapper mapper,IStorage storage,ICacheService<User> cacheUserService,ICacheService<List<User>> cacheService)
+        public UserService(IUnitOfWork unitOfWork,IMapper mapper,IStorage storage,ICacheService<User> cacheUserService,ICacheService<List<User>> cacheService,IElasticClient elasticClient)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _storage = storage;
             _cacheUserService = cacheUserService;
             _cacheService = cacheService;
+            _elasticClient = elasticClient;
         }
         public async Task<UserDTO> CreateUserAsync(UserFormDTO userForCreationDTO)
         {
@@ -51,6 +54,7 @@ namespace Core.Services
             user.PasswordHash = Hash.HashPassword(userForCreationDTO.Password);
          
             _unitOfWork.UserRepository.Create(user);
+            var response = await _elasticClient.IndexDocumentAsync(user);
             await _unitOfWork.SaveChangesAsync();
 
             await _cacheUserService.CacheItems(user.Id.ToString(), user);
@@ -105,13 +109,16 @@ namespace Core.Services
             if (users == null)
             {
                 users = await _unitOfWork.UserRepository.FindAllAsync(false,userRequest);
-
+                var result = await _elasticClient.SearchAsync<User>(s => s.Query(
+                     q => q.QueryString(
+                     d => d.Query('*' + userRequest.SearchWord + '*')
+                )));
                 if (users.Count == 0)
                 {
                     return null;
                 }
 
-                await _cacheService.CacheItems(_userKeyCaching, users);
+                await _cacheService.CacheItems(_userKeyCaching, result.Documents.ToList());
             }
             var userDTOs = _mapper.Map<List<UserDTO>>(users);
 
@@ -130,7 +137,7 @@ namespace Core.Services
            var avatarDTO = _mapper.Map<AvatarDTO>(avatar);
            return avatarDTO;
         }
-        public Task<List<UserAvatars>> GetUserIdWithAvatar()
+        public Task<List<UserAvatarsDTO>> GetUserIdWithAvatar()
         {
            return _unitOfWork.UserRepository.GetAvatarsWihtUserId();
         }

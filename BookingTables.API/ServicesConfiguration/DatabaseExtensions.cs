@@ -1,9 +1,6 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+
 
 namespace BookingTablesAPI.ServiceExtensions
 {
@@ -12,11 +9,10 @@ namespace BookingTablesAPI.ServiceExtensions
         public static void ConfigureDatabase(this IServiceCollection services,IConfiguration configuration)
         {
             //var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-            var connectionString = configuration.GetConnectionString("sqlConnection");
-
+            string connectionString = configuration.GetConnectionString("sqlConnection");
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connectionString,
                                                       builder => builder.MigrationsAssembly("BookingTables.API")));
-         
+            services.AddHealthChecks().AddSqlServer(connectionString);
         }
 
         public static WebApplication MigrateDatabase(this WebApplication webHost) 
@@ -27,7 +23,12 @@ namespace BookingTablesAPI.ServiceExtensions
                 try
                 {
                     var db = services.GetRequiredService<ApplicationContext>();
-                    db.Database.Migrate();
+
+                    if (db.Database.GetPendingMigrations().Count() > 0)
+                    {
+                        db.Database.Migrate();
+                    }
+
                 }
                 catch (Exception ex)
                 {

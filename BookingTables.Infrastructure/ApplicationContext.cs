@@ -10,14 +10,14 @@ namespace Infrastructure
         public DbSet<Order> Orders { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Avatar> Avatars { get; set; }
-        public DbSet<UserAvatars> UserAvatars { get; set; }
+        public DbSet<UserAvatarsDTO> UserAvatars { get; set; }
         public ApplicationContext(DbContextOptions options) : base(options)
         {
-
+           
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserAvatars>().ToView(nameof(UserAvatars)).HasKey(user => user.Id);
+            modelBuilder.Entity<UserAvatarsDTO>().ToView(nameof(UserAvatars)).HasKey(user => user.Id);
         }
     }
 }

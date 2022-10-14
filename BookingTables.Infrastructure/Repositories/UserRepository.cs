@@ -14,6 +14,10 @@ namespace Infrastructure.Repositories
    
         }
 
+        public override Task<List<User>> FindAllAsync(bool trackChanges, UserRequest requestFeatures)
+        {
+            return base.FindAllAsync(trackChanges, requestFeatures);
+        }
         public  Task<User> GetUserAsync(int id)
         {
            return _applicationContext.Users.FirstOrDefaultAsync(user=>user.Id == id);
@@ -27,7 +31,7 @@ namespace Infrastructure.Repositories
             var avatar = await _applicationContext.Users.Include(user=>user.Avatar).FirstOrDefaultAsync(user=>user.Id == id );
             return avatar.Avatar;
         }
-        public Task<List<UserAvatars>> GetAvatarsWihtUserId()
+        public Task<List<UserAvatarsDTO>> GetAvatarsWihtUserId()
         {
             return _applicationContext.UserAvatars.ToListAsync();
         }

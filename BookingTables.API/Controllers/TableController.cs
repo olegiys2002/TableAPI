@@ -8,17 +8,18 @@ using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/{version:apiVersion}/[controller]")]
     [ApiController]
     public class TableController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ITableService _tableService;
-        public TableController(ITableService tableService,IMediator mediator)
+        private readonly ILogger<TableController> _logger;
+        public TableController(ITableService tableService,IMediator mediator,ILogger<TableController> logger)
         {
             _tableService = tableService;
             _mediator = mediator;
-       
+            _logger = logger;
         }
 
         [HttpGet("{id}",Name ="tableById")]
@@ -35,6 +36,7 @@ namespace BookingTablesAPI.Controllers
         [HttpPut]
         public async Task<IActionResult> GetTables(TableRequest? tableRequest)
         {
+            _logger.LogInformation($"Get tables with {tableRequest.PageSize} page size");
             var tablesDTOs = await _mediator.Send(new GetTablesQuery(tableRequest));
             //List<TableDTO> tableDTOs = await _tableService.GetTables();
             return tablesDTOs == null ? NotFound() : Ok(tablesDTOs); 

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
+﻿using IdentityServer4.AccessTokenValidation;
 
 namespace BookingTablesAPI.ServicesConfiguration
 {
@@ -8,24 +6,29 @@ namespace BookingTablesAPI.ServicesConfiguration
     {
         public static void ConfigureAuthentication(this IServiceCollection services,IConfiguration configuration)
         {
-            var jwtSettings = configuration.GetSection("JwtSettings");
-            string securityKey = jwtSettings.GetSection("secretKey").Value;
-            services.AddAuthentication(opt =>
-            {
-                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(opt =>
-            {
-                opt.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtSettings.GetSection("validIssuer").Value,
-                    ValidAudience = jwtSettings.GetSection("validAudience").Value,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(securityKey))
-                };
-            });
+
+            //services.AddAuthentication("Bearer")
+            //         .AddJwtBearer("Bearer", options =>
+            //         {
+            //             options.Authority = "https://localhost:5090";
+            //             options.RequireHttpsMetadata = false;
+            //             options.Audience = "tablesAPI";
+
+            //           
+
+            //         });
+
+            services.AddAuthentication("Bearer")
+                    .AddJwtBearer("Bearer", options =>
+                     {
+                         options.Authority = "https://identity:5090";
+                         options.RequireHttpsMetadata = false;
+                         options.Audience = "tablesAPI";
+                         options.MetadataAddress = "https://identity:5090/.well-known/openid-configuration";
+
+                     });
+
+
         }
     }
 }

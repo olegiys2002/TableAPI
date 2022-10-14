@@ -2,6 +2,7 @@
 using Core.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nest;
 using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
@@ -12,20 +13,22 @@ namespace BookingTablesAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly IElasticClient _elasticClient;
+        public UserController(IUserService userService,IElasticClient elasticClient)
         {
             _userService = userService;
+            _elasticClient = elasticClient;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetUsers([FromQuery] UserRequest userRequest)
+        
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> GetUsers(UserRequest userRequest)
         {
             var userDTOs = await _userService.GetUsersAsync(userRequest);
             return userDTOs == null ? NotFound() : Ok(userDTOs);
         }
 
         [HttpGet("{id}",Name ="UserById")]
-
         public async Task<IActionResult> GetUserById(int id)
         {
             var userDTO = await _userService.GetUserByIdAsync(id);
@@ -49,7 +52,6 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-
         public async Task<IActionResult> UpdateUser(int id ,[FromForm] UserFormDTO userForUpdatingDTO)
         {
             var updatedUser = await _userService.UpdateUserAsync(id,userForUpdatingDTO);
@@ -57,16 +59,16 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-
         public async Task<IActionResult> DeleteUser(int id)
         {
            var userId = await _userService.DeleteUserAsync(id);
            return userId != null ? Ok(userId) : NotFound();
         }
-        [HttpPut]
-        public async Task<IActionResult> GetUsersAvatar()
-        {
-            return Ok(await _userService.GetUserIdWithAvatar());
-        }
+
+        //[HttpPut(Name ="UserAvatar")]
+        //public async Task<IActionResult> GetUsersAvatar()
+        //{
+        //    return Ok(await _userService.GetUserIdWithAvatar());
+        //}
     }
 }

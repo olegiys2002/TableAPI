@@ -9,6 +9,6 @@ namespace Infrastructure.IRepositories
        Task<User> GetUserAsync(int id);
        Task<User> GetValidateUserAsync(string email, string passwordHash);
        Task<Avatar> GetUserAvatarAsync(int id);
-       Task<List<UserAvatars>> GetAvatarsWihtUserId();
+       Task<List<UserAvatarsDTO>> GetAvatarsWihtUserId();
     }
 }
