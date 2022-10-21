@@ -21,7 +21,7 @@ namespace Infrastructure.Repositories
 
         public Task<Table> GetTableAsync(int id)
         {
-           return _applicationContext.Tables.FirstOrDefaultAsync(table=>table.Id == id);
+           return _applicationContext.Tables.FirstOrDefaultAsync(table => table.Id == id);
         }
         public Task<List<Table>> GetTablesByIdsAsync(IEnumerable<int> ids,bool trackChanges)
         {

@@ -4,11 +4,10 @@ using BookingTablesAPI.ServicesConfiguration;
 using Core.Services;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Microsoft.IdentityModel.Logging;
-using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//IdentityModelEventSource.ShowPII = true;
 // Add services to the container.
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,6 +30,7 @@ builder.Services.ConfigureQuartz(builder.Configuration);
 builder.Services.ConfigureElasticsearch(builder.Configuration);
 builder.Services.ConfigureMassTransit();
 
+
 var app = builder.Build();
 
 app.MigrateDatabase();
@@ -40,7 +40,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseHttpsRedirection();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();

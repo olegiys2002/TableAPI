@@ -7,26 +7,13 @@ namespace BookingTablesAPI.ServicesConfiguration
         public static void ConfigureAuthentication(this IServiceCollection services,IConfiguration configuration)
         {
 
-            //services.AddAuthentication("Bearer")
-            //         .AddJwtBearer("Bearer", options =>
-            //         {
-            //             options.Authority = "https://localhost:5090";
-            //             options.RequireHttpsMetadata = false;
-            //             options.Audience = "tablesAPI";
-
-            //           
-
-            //         });
-
-            services.AddAuthentication("Bearer")
-                    .AddJwtBearer("Bearer", options =>
-                     {
-                         options.Authority = "https://identity:5090";
-                         options.RequireHttpsMetadata = false;
-                         options.Audience = "tablesAPI";
-                         options.MetadataAddress = "https://identity:5090/.well-known/openid-configuration";
-
-                     });
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                    .AddIdentityServerAuthentication(options =>
+            {
+                options.Authority = "http://identity";
+                options.RequireHttpsMetadata = false;
+                options.ApiName = "tablesAPI";
+            });
 
 
         }

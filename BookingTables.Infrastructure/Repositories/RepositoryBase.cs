@@ -20,7 +20,7 @@ namespace Infrastructure
             dataSet.Add(entity);    
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             dataSet.Remove(entity);
         }

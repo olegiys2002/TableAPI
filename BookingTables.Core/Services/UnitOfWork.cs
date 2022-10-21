@@ -9,7 +9,6 @@ namespace Core.Services
     {
         private readonly ApplicationContext _applicationContext;
         private ITableRepository ?_tableRepository;
-        private IUserRepository ?_userRepository;
         private IOrderRepository ?_orderRepository;
         public UnitOfWork(ApplicationContext applicationContext)
         {
@@ -23,15 +22,6 @@ namespace Core.Services
                 return _tableRepository;
             }
         }
-        public IUserRepository UserRepository
-        {
-            get
-            {
-                _userRepository ??= new UserRepository(_applicationContext);
-                return _userRepository;
-            }
-        }
-
         public IOrderRepository OrderRepository
         {
             get

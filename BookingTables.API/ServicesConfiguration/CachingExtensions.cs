@@ -1,5 +1,4 @@
 ﻿using Core.IServices;
-using Core.Models;
 using Core.Services;
 using Models.Models;
 
@@ -11,10 +10,8 @@ namespace BookingTablesAPI.ServicesConfiguration
         {
             services.AddDistributedMemoryCache();
             services.AddMemoryCache();
-            services.AddScoped<ICacheService<List<Table>>,CacheService<List<Table>>>();
-            services.AddScoped<ICacheService<List<User>>, CacheService<List<User>>>();
-            services.AddScoped<ICacheService<Order>, CacheService<Order>>();
-            services.AddScoped<ICacheService<User>,CacheService<User>>();
+            services.AddSingleton<ICacheService<List<Table>>,CacheService<List<Table>>>();
+            services.AddSingleton<ICacheService<Order>, CacheService<Order>>();
         }
     }
 }

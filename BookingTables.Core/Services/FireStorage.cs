@@ -29,11 +29,6 @@ namespace Core.Services
                 }).Child("avatars").Child(formFile.FileName).PutAsync(formFile.OpenReadStream(), cancelletion.Token);
 
         }
-        //public async Task<IFormFile> GetAvatarAsync(IFormFile formFile)
-        //{
-   
-        //}
-
     }
 
 }

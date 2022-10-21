@@ -9,11 +9,10 @@ services:
      environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=aurum123LIKE
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       #- ConnectionString=Server=bookingtablesapi-db;Database=BookingTableApp;User=SA;Password=aurum123ILIKE
       - ConnectionString="server=host.docker.internal;database=BookingTableApp;Integrated Security=false;User Id=sa;Password=aurum123ILIKE"
      ports:
+      - "5060:80"
       - "5050:443"
      depends_on:
       #- bookingtablesapi-db
@@ -22,8 +21,7 @@ services:
       - identity
      links:
      - "cache"
-     volumes:
-      - ~/.aspnet/https:/https:ro
+  
 
 
   #bookingtablesapi-db:
@@ -41,7 +39,7 @@ services:
     ports:
      - 6379:6379
     container_name: redis
-
+  
   rabbitmq:
     image: rabbitmq:3-management
     ports:
@@ -61,10 +59,11 @@ services:
     - 5070:80
     container_name: emailsender
 
+
   identity:
     image: ${DOCKER_REGISTRY-}identity
     ports:
-      - 5090:443
+      - "5090:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
@@ -76,6 +75,11 @@ services:
     container_name: identity
     volumes:
       - ~/.aspnet/https:/https:ro
+    depends_on:
+      #- bookingtablesapi-db
+      - cache
+
+
   
   emailsender-db:
    image: mongo
@@ -85,6 +89,7 @@ services:
    depends_on: 
    - rabbitmq
 
+
   booking-table-front:
    build:
     context: ./../BookingTablesFront/
@@ -92,6 +97,7 @@ services:
    container_name: booking-table-front
    ports:
      - 80:80
+
 
   elasticsearch:
    container_name: elasticsearch
@@ -117,15 +123,11 @@ services:
     - elasticsearch
    environment:
     - ELASTICSEARCH_URL=http://localhost:9200
-
-
   
 volumes:
     esdata:
         driver: local
 
 
-    
 
 
-     

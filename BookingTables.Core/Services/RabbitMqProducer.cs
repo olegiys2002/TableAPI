@@ -21,7 +21,6 @@ namespace Core.Services
             using var connection = factory.CreateConnection();
             using var channel = connection.CreateModel();
             channel.QueueDeclare(_options.Queue, durable: true, exclusive: false, autoDelete: false, arguments: null);
-
             var json = JsonConvert.SerializeObject(message);    
             var bytes = Encoding.UTF8.GetBytes(json);
 

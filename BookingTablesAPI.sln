@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{459CAC33-A4F6-4FA1-859B-F3F36BA001CF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTables.Shared", "BookingTables.SharedAssembly\BookingTables.Shared.csproj", "{C2E4B73B-154E-4F15-AB78-5525A1D3D073}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTables.API", "BookingTables.API\BookingTables.API.csproj", "{F48FD1E3-4F51-4CDC-9EBD-9258250AD48A}"
@@ -23,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{459CAC33-A4F6-4FA1-859B-F3F36BA001CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{459CAC33-A4F6-4FA1-859B-F3F36BA001CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{459CAC33-A4F6-4FA1-859B-F3F36BA001CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{459CAC33-A4F6-4FA1-859B-F3F36BA001CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C2E4B73B-154E-4F15-AB78-5525A1D3D073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C2E4B73B-154E-4F15-AB78-5525A1D3D073}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2E4B73B-154E-4F15-AB78-5525A1D3D073}.Release|Any CPU.ActiveCfg = Release|Any CPU

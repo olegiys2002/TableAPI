@@ -3,12 +3,13 @@ using Core.DTOs;
 using Core.IServices;
 using Core.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
-    [Route("api/{version:apiVersion}/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TableController : ControllerBase
     {
@@ -23,7 +24,6 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpGet("{id}",Name ="tableById")]
-       
         public async Task<IActionResult> GetTable(int id)
         {
             var tableDTO = await _mediator.Send(new GetTableQuery(id));
