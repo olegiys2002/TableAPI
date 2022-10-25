@@ -5,7 +5,7 @@ using Core.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -28,17 +28,16 @@ namespace BookingTablesAPI.Controllers
         {
             var tableDTO = await _mediator.Send(new GetTableQuery(id));
 
-            //TableDTO tableDTO = await _tableService.GetTableById(id);
-
             return tableDTO == null ? NotFound() : Ok(tableDTO);
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPut]
         public async Task<IActionResult> GetTables(TableRequest? tableRequest)
         {
             _logger.LogInformation($"Get tables with {tableRequest.PageSize} page size");
             var tablesDTOs = await _mediator.Send(new GetTablesQuery(tableRequest));
-            //List<TableDTO> tableDTOs = await _tableService.GetTables();
+
             return tablesDTOs == null ? NotFound() : Ok(tablesDTOs); 
         }
 
@@ -48,6 +47,7 @@ namespace BookingTablesAPI.Controllers
         {
            var tables = await _tableService.CreateCollectionOfTablesAsync(tableFormDTOs);
            var ids = string.Join(",", tables.Select(table => table.Id));
+
            return tables == null ? BadRequest() : CreatedAtRoute("Collection", new { ids }, tables);
         }
 
@@ -55,6 +55,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> GetCollectionOfTables(IEnumerable<int> ids)
         {
            var tablesDTOs =  await _tableService.GetTablesByIdAsync(ids);
+
            return Ok(tablesDTOs);
         }
 
@@ -63,7 +64,6 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> CreateTable(TableFormDTO tableForCreationDTO)
         {
             var tableDTO = await _mediator.Send(new AddTableCommand(tableForCreationDTO));
-            //TableDTO tableDTO = await _tableService.CreateTable(tableForCreationDTO);
 
             return CreatedAtRoute("tableById",new { tableDTO.Id },tableDTO);
         }
@@ -73,7 +73,7 @@ namespace BookingTablesAPI.Controllers
         public async Task<IActionResult> UpdateTable(int id, TableFormDTO tableForUpdatingDTO)
         {
             var updatedTable = await _mediator.Send(new UpdateTableCommand(tableForUpdatingDTO,id));
-            //bool isSuccess = await _tableService.UpdateTable(id, tableForUpdatingDTO);
+      
             return updatedTable != null ? Ok(updatedTable) : NotFound();
         }
 

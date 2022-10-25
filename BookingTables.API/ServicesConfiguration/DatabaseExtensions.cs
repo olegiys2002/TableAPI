@@ -1,7 +1,6 @@
 ﻿using Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace BookingTablesAPI.ServiceExtensions
 {
     public static class DatabaseExtensions

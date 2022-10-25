@@ -4,7 +4,7 @@ using Core.IServices;
 using FireSharp.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Models.Models;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace Core.Services
 {

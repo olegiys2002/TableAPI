@@ -1,6 +1,6 @@
 ﻿using Core.DTOs;
 using MediatR;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace Core.Queries
 {

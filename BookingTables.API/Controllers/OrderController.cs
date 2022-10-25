@@ -2,7 +2,7 @@
 using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Mvc;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -12,7 +12,7 @@ namespace BookingTablesAPI.Controllers
     {
         private readonly IOrderService _orderService;
        
-        public OrderController(IOrderService orderService,IRabbitMqService rabbitMqService)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
         }

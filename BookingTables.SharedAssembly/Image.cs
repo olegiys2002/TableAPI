@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Shared
+namespace BookingTables.Shared
 {
     public static class Image
     {

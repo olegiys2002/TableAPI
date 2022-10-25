@@ -28,7 +28,7 @@ builder.Services.ConfigureVersioning();
 builder.Logging.ConfigureSerilog(builder.Configuration);
 builder.Services.ConfigureQuartz(builder.Configuration);
 builder.Services.ConfigureElasticsearch(builder.Configuration);
-builder.Services.ConfigureMassTransit();
+builder.Services.ConfigureMassTransit(builder.Configuration);
 
 
 var app = builder.Build();

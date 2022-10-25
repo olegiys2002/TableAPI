@@ -1,6 +1,6 @@
 ﻿using BookingTables.Shared.SortModels;
 
-namespace Shared.RequestModels
+namespace BookingTables.Shared.RequestModels
 {
     public abstract class RequestFeatures
     {

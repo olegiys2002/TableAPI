@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace SharedAssembly
+namespace BookingTables.Shared.Hash
 {
     public static class Hash
     {

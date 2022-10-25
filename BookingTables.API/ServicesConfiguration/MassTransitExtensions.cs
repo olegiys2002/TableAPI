@@ -1,14 +1,20 @@
 ﻿using MassTransit;
-using MassTransit.Transports;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+
 
 namespace BookingTables.API.ServicesConfiguration
 {
     public static class MassTransitExtensions
     {
-        public static void ConfigureMassTransit(this IServiceCollection services)
+        public static void ConfigureMassTransit(this IServiceCollection services,IConfiguration configuration)
         {
-            services.AddMassTransit(x => x.UsingRabbitMq());
+            var rabbitMqHost = configuration["RabbitMq:hostname"];
+            services.AddMassTransit(config =>
+            {
+                config.UsingRabbitMq((ctx, cfg) =>
+                {
+                    cfg.Host(rabbitMqHost);
+                });
+            });
         }
 
     }

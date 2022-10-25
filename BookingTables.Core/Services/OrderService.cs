@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
 using Core.DTOs;
 using Core.IServices;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Models.Models;
-using Shared.RequestModels;
-using System.Security.Claims;
+using BookingTables.Shared.RequestModels;
+using BookingTables.Shared.EventModels;
+using Microsoft.AspNetCore.Authorization;
+using IdentityModel;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Services
 {
@@ -13,15 +17,16 @@ namespace Core.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRabbitMqService _rabbitMqService;
-        public OrderService(IMapper mapper,IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor,IRabbitMqService rabbitMqService)
+        private readonly IPublishEndpoint _publishEndpoint;
+     
+        public OrderService(IMapper mapper,IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor,IPublishEndpoint publishEndpoint)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
-            _rabbitMqService = rabbitMqService;
-       
+            _publishEndpoint = publishEndpoint;   
         }
+        [Authorize]
         public async Task<OrderDTO> CreateOrderAsync(OrderFormDTO orderForCreationDTO)
         {
             var order = _mapper.Map<Order>(orderForCreationDTO);
@@ -43,14 +48,15 @@ namespace Core.Services
             }
 
             order.Table = tables;
+
             _unitOfWork.OrderRepository.Create(order);
             await _unitOfWork.SaveChangesAsync();
 
-            var email = _httpContextAccessor.HttpContext.User.Claims.First(claim => claim.Type == ClaimTypes.Email).Value;
-            
-            _rabbitMqService.SendMessage(new {Email = email,Tables = tablesNumber});
-           
+            var email = _httpContextAccessor.HttpContext.User.Claims.First(claim => claim.Type == JwtClaimTypes.Email).Value;
 
+           
+            await _publishEndpoint.Publish(new Notification { Email = email, Tables = tablesNumber });
+           
             var orderDTO = _mapper.Map<OrderDTO>(order);
             return orderDTO;
 

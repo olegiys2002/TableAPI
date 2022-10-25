@@ -13,7 +13,6 @@ namespace BookingTablesAPI.ServicesConfiguration
             serviceCollection.AddScoped<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddScoped<ITableService, TableService>();
             serviceCollection.AddScoped<IOrderService, OrderService>();
-            serviceCollection.AddSingleton<IRabbitMqService, RabbitMqProducer>();
             serviceCollection.AddMediatR(AppDomain.CurrentDomain.Load("BookingTables.Core"));
             serviceCollection.AddHttpContextAccessor();
             serviceCollection.AddSignalR();

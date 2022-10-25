@@ -23,4 +23,8 @@
     <ProjectReference Include="..\BookingTables.API\BookingTables.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

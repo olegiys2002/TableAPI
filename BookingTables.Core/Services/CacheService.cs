@@ -15,17 +15,6 @@ namespace Core.Services
             _memoryCache = memoryCache;
             _cache = cache;
         }
-
-        //public void CacheItems(string key,T items)
-        //{
-        //        var cacheEntryOptions = new MemoryCacheEntryOptions()
-        //                                    .SetSize(1024)
-        //                                    .SetSlidingExpiration(TimeSpan.FromSeconds(30))
-        //                                    .SetAbsoluteExpiration(TimeSpan.FromSeconds(3600));
-
-        //        _memoryCache.Set(key, items, cacheEntryOptions);
-        //}
-
         public DistributedCacheEntryOptions GetCacheOptions()
         {
 

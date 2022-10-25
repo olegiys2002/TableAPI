@@ -1,5 +1,5 @@
 ﻿using Models.Models;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace Infrastructure.IRepositories
 {

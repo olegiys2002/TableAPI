@@ -1,8 +1,8 @@
 ﻿using Infrastructure.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Models.Models;
-using Shared.RepositoriesExtensions;
-using Shared.RequestModels;
+using BookingTables.Shared.RepositoriesExtensions;
+using BookingTables.Shared.RequestModels;
 
 namespace Infrastructure.Repositories
 {

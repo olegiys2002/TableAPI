@@ -1,5 +1,5 @@
 ﻿using Core.DTOs;
-using Shared.RequestModels;
+using BookingTables.Shared.RequestModels;
 
 namespace Core.IServices
 {

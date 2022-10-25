@@ -1,7 +1,5 @@
-﻿using Elasticsearch.Net;
-using Models.Models;
-using Nest;
-using static System.Reflection.Metadata.BlobBuilder;
+﻿using Nest;
+
 
 namespace BookingTables.API.ServicesConfiguration
 {
