@@ -12,7 +12,10 @@ namespace Infrastructure.Repositories
         {
           
         }
-
+        public Task<List<Order>> FindAllUserOrdersAsync(string userId)
+        {
+            return _applicationContext.Orders.Where(order=>order.UserId == userId).ToListAsync();
+        }
         public Task<Order> GetOrderAsync(int id)
         {
            return _applicationContext.Orders.Include(order => order.Table).FirstOrDefaultAsync(order => order.Id == id);

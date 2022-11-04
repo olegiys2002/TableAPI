@@ -1,5 +1,4 @@
-﻿using Core.IServices;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Quartz;
 
 namespace BookingTables.Core.Services

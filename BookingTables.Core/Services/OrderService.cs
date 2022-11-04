@@ -18,15 +18,17 @@ namespace Core.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPublishEndpoint _publishEndpoint;
-     
+
         public OrderService(IMapper mapper,IUnitOfWork unitOfWork,IHttpContextAccessor httpContextAccessor,IPublishEndpoint publishEndpoint)
         {
+
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _httpContextAccessor = httpContextAccessor;
-            _publishEndpoint = publishEndpoint;   
+            _publishEndpoint = publishEndpoint;  
+        
         }
-        [Authorize]
+
         public async Task<OrderDTO> CreateOrderAsync(OrderFormDTO orderForCreationDTO)
         {
             var order = _mapper.Map<Order>(orderForCreationDTO);
@@ -46,21 +48,25 @@ namespace Core.Services
             {
                 return null;
             }
+    
+            var userName = _httpContextAccessor.HttpContext.User.Claims.First(claim => claim.Type == JwtClaimTypes.Name).Value;
+            var userId = _httpContextAccessor.HttpContext.User.Claims.First(claim => claim.Type == JwtClaimTypes.Subject).Value;
 
             order.Table = tables;
+            order.UserName = userName;
+            order.UserId = userId;
 
             _unitOfWork.OrderRepository.Create(order);
+          
             await _unitOfWork.SaveChangesAsync();
 
             var email = _httpContextAccessor.HttpContext.User.Claims.First(claim => claim.Type == JwtClaimTypes.Email).Value;
-
            
             await _publishEndpoint.Publish(new Notification { Email = email, Tables = tablesNumber });
            
             var orderDTO = _mapper.Map<OrderDTO>(order);
+
             return orderDTO;
-
-
         }
 
         public async Task<int?> DeleteOrderAsync(int id)

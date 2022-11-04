@@ -1,5 +1,5 @@
-﻿using MassTransit;
-
+﻿using BookingTables.Core.Services;
+using MassTransit;
 
 namespace BookingTables.API.ServicesConfiguration
 {
@@ -10,10 +10,19 @@ namespace BookingTables.API.ServicesConfiguration
             var rabbitMqHost = configuration["RabbitMq:hostname"];
             services.AddMassTransit(config =>
             {
+                config.AddConsumer<UserConsumer>();
                 config.UsingRabbitMq((ctx, cfg) =>
                 {
                     cfg.Host(rabbitMqHost);
+
+                    cfg.ReceiveEndpoint("user-received", e =>
+                    {
+                        e.ConfigureConsumer<UserConsumer>(ctx);
+                    });
                 });
+                
+               
+             
             });
         }
 

@@ -3,6 +3,7 @@ using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 using BookingTables.Shared.RequestModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -33,7 +34,7 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPost]
-     
+        [Authorize]
         public async Task<IActionResult> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             var orderDTO = await _orderService.CreateOrderAsync(orderForCreationDTO);
@@ -41,7 +42,6 @@ namespace BookingTablesAPI.Controllers
         }
 
         [HttpPut("{id}")]
-
         public async Task<IActionResult> UpdateOrder(int id, OrderFormDTO orderForUpdatingDTO)
         {
             var updatedOrder = await _orderService.UpdateOrderAsync(id, orderForUpdatingDTO);
