@@ -9,20 +9,6 @@ pool:
 
  
 stages:
-- stage: BuildSolution 
-  displayName: Build
-  jobs:
-    - job: Build
-      displayName: BuildProject
-      steps:
-       - task: NuGetCommand@2
-         inputs:
-            command: 'restore'
-            restoreSolution: '**/*.sln'
-            feedsToUse: 'select'
-       - task: VSBuild@1
-         inputs:
-           solution: '**\*.sln'
 - stage: Deploy
   displayName: Build image
   jobs:  
