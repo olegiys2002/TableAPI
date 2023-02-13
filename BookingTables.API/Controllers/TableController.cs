@@ -31,7 +31,6 @@ namespace BookingTablesAPI.Controllers
             return tableDTO == null ? NotFound() : Ok(tableDTO);
         }
 
-        [Authorize(Roles ="Admin")]
         [HttpPut]
         public async Task<IActionResult> GetTables(TableRequest? tableRequest)
         {
@@ -41,8 +40,7 @@ namespace BookingTablesAPI.Controllers
             return tablesDTOs == null ? NotFound() : Ok(tablesDTOs); 
         }
 
-        [HttpPost("collection")]
-      
+        [HttpPost("collection")]     
         public async Task<IActionResult> CreateCollectionOfTables(IEnumerable<TableFormDTO> tableFormDTOs)
         {
            var tables = await _tableService.CreateCollectionOfTablesAsync(tableFormDTOs);
@@ -84,5 +82,6 @@ namespace BookingTablesAPI.Controllers
             var tableId = await _tableService.DeleteTableAsync(id);
             return tableId != null ? Ok(tableId) : NotFound();
         }
+
     }
 }

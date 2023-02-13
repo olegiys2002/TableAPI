@@ -28,6 +28,7 @@ namespace Core.Handlers
 
             table.CountOfSeats = tableForUpdateDTO.CountOfSeats;
             table.Number = tableForUpdateDTO.Number;
+            table.Cost = tableForUpdateDTO.Cost;
 
             await _unitOfWork.SaveChangesAsync();
 

@@ -2,7 +2,7 @@
 using Core.IServices;
 using MassTransit;
 
-namespace BookingTables.Core.Services
+namespace BookingTables.Core.Consumers
 {
     public class UserConsumer : IConsumer<UserInfo>
     {
@@ -17,9 +17,10 @@ namespace BookingTables.Core.Services
             var userName = context.Message.UserName;
 
             var orders = await _unitOfWork.OrderRepository.FindAllUserOrdersAsync(userId);
-            orders.ForEach(order=>order.UserName = userName);
+            orders.ForEach(order => order.UserName = userName);
 
             await _unitOfWork.SaveChangesAsync();
+            
         }
     }
 }

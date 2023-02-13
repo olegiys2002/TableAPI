@@ -18,6 +18,10 @@ namespace BookingTables.Shared.RepositoriesExtensions
         }
         public static IQueryable<T> SortItems<T>(this IQueryable<T> queryable, SortModel []sortModel)
         {
+            if (sortModel == null)
+            {
+                return queryable;
+            }
             if (sortModel.Count()==0)
             {
                 return queryable;

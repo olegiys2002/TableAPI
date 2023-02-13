@@ -3,7 +3,7 @@ using Core.DTOs;
 using Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 using BookingTables.Shared.RequestModels;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace BookingTablesAPI.Controllers
 {
@@ -12,29 +12,28 @@ namespace BookingTablesAPI.Controllers
     public class OrderController : AuthenticationGuardController
     {
         private readonly IOrderService _orderService;
-       
+
         public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
         }
 
-        [HttpGet("{id}",Name ="OrderById")]
+        [HttpGet("{id}", Name = "OrderById")]
 
         public async Task<IActionResult> GetOrder(int id)
         {
-           var orderDTO = await  _orderService.GetOrderAsync(id);
+            var orderDTO = await _orderService.GetOrderAsync(id);
             return orderDTO == null ? NotFound() : Ok(orderDTO);
         }
-  
-        [HttpGet]
-        public async Task<IActionResult> GetOrders([FromQuery] OrderRequest orderRequest)
+
+        [HttpPut]
+        public async Task<IActionResult> GetOrders(OrderRequest orderRequest)
         {
             var orderDTOs = await _orderService.GetOrdersAsync(orderRequest);
             return orderDTOs == null ? NotFound() : Ok(orderDTOs);
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreateOrder(OrderFormDTO orderForCreationDTO)
         {
             var orderDTO = await _orderService.CreateOrderAsync(orderForCreationDTO);
@@ -54,6 +53,23 @@ namespace BookingTablesAPI.Controllers
         {
             var orderId = await _orderService.DeleteOrderAsync(id);
             return orderId != null ? Ok(orderId) : NotFound();
+        }
+
+
+        [HttpPut]
+        [Route("~/api/user/orders")]
+        public async Task<IActionResult> GetUserOrders(OrderRequest orderRequest)
+        {
+            var orders = await _orderService.GetUserOrders(orderRequest);
+            return orders != null ? Ok(orders) : NotFound();
+        }
+
+        [HttpPatch("{id}")]
+        
+        public async Task<IActionResult> PartiallyUpdateOrder(int id,JsonPatchDocument<OrderFormDTO> orderFormDTO)
+        {
+           var updatedOrder = await _orderService.PartiallyUpdateOrder(id, orderFormDTO);
+           return updatedOrder != null ? Ok(updatedOrder) : NotFound();
         }
 
     }

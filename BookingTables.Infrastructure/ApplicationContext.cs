@@ -13,7 +13,8 @@ namespace Infrastructure
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            modelBuilder.Entity<Table>().HasIndex(t => t.Number).IsUnique();
+            
         }
     }
 }

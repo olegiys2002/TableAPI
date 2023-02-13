@@ -1,4 +1,4 @@
-﻿using BookingTables.Core.Services;
+﻿using BookingTables.Core.Consumers;
 using MassTransit;
 
 namespace BookingTables.API.ServicesConfiguration

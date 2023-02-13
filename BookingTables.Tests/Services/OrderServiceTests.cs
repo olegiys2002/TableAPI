@@ -8,6 +8,7 @@ using Infrastructure.TestExtensions;
 using Microsoft.AspNetCore.Http;
 using Models.Models;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace Tests.Services
 {
@@ -17,6 +18,8 @@ namespace Tests.Services
         private readonly Mock<IUnitOfWork> _unitOfWork = new Mock<IUnitOfWork>();
         private readonly Mock<IHttpContextAccessor> _http = new Mock<IHttpContextAccessor>();
         private readonly Mock<IPublishEndpoint> _publishEndpoint = new Mock<IPublishEndpoint>();
+        private readonly Mock<ILogger<OrderService>> _logger = new Mock<ILogger<OrderService>>();
+
         private readonly List<int> _tableDTOs = new List<int>
         {
             0,
@@ -39,7 +42,7 @@ namespace Tests.Services
 
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
             _unitOfWork.Setup(rep => rep.OrderRepository.Create(order));
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object,_logger.Object);
 
             var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
@@ -60,7 +63,7 @@ namespace Tests.Services
 
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
             var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
@@ -79,7 +82,7 @@ namespace Tests.Services
 
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
             var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
@@ -93,7 +96,7 @@ namespace Tests.Services
             var order = GetTestOrder();
             _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
             var result = await orderService.DeleteOrderAsync(id);
 
             Assert.NotNull(result);
@@ -105,7 +108,7 @@ namespace Tests.Services
             Order order = null;
             _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
             var result = await orderService.DeleteOrderAsync(id);
 
             Assert.Null(result);
@@ -119,7 +122,7 @@ namespace Tests.Services
             _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
             _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
             var result = await orderService.GetOrderAsync(id);
 
             Assert.IsType<OrderDTO>(result);
@@ -133,7 +136,7 @@ namespace Tests.Services
             _unitOfWork.Setup(or => or.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
             _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
             var result = await orderService.GetOrderAsync(id);
 
             Assert.Null(order);
@@ -152,7 +155,7 @@ namespace Tests.Services
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
             _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
             var createdOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
             Assert.NotNull(createdOrder);
@@ -175,7 +178,7 @@ namespace Tests.Services
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult((order.Table)));
             _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
             var updatedOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
 
@@ -197,7 +200,7 @@ namespace Tests.Services
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
             _unitOfWork.Setup(rep => rep.OrderRepository.GetOrderAsync(It.IsAny<int>())).Returns(Task.FromResult(order));
 
-            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object);
+            var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
             var updatedOrder = await orderService.UpdateOrderAsync(id, orderForCreation);
 
@@ -218,7 +221,9 @@ namespace Tests.Services
                 CountOfPeople = 6,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                DateOfReservation = DateTime.Now,
+                StartOfReservation = DateTime.Now,
+                EndOfReservation = DateTime.Now,
+
 
             };
             var tables = new List<Table>();
@@ -254,7 +259,8 @@ namespace Tests.Services
             var orderForCreation = new OrderFormDTO()
             {
                 CountOfPeople = 6,
-                DateOfReservation = DateTime.Now,
+                StartOfReservation = DateTime.Now,
+                EndOfReservation = DateTime.Now,
                 TablesId = _tableDTOs
             };
             return orderForCreation;

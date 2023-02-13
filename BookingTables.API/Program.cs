@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//IdentityModelEventSource.ShowPII = true;
-// Add services to the container.
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureDatabase(builder.Configuration);
@@ -50,3 +49,5 @@ app.MapHealthChecks("/health",new HealthCheckOptions()
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
 });
 app.Run();
+
+public partial class Program { }
