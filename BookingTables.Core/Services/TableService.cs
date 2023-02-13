@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Core.DTOs;
 using Core.IServices;
-using FireSharp.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Models.Models;
 using BookingTables.Shared.RequestModels;
@@ -12,14 +11,11 @@ namespace Core.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        private readonly IFirebaseClient _client;
-
         private readonly IMemoryCache _memoryCache;
-        public TableService(IUnitOfWork unitOfWork,IMapper mapper,IFirebaseClient client,IMemoryCache memoryCache)
+        public TableService(IUnitOfWork unitOfWork,IMapper mapper,IMemoryCache memoryCache)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
-            _client = client;
             _memoryCache = memoryCache;
         }
         
@@ -41,7 +37,6 @@ namespace Core.Services
             await _unitOfWork.SaveChangesAsync();
 
             var tableDTO = _mapper.Map<TableDTO>(table);
-            //var setter = await _client.SetAsync<TableDTO>($"TableList/+{tableDTO.Id}",tableDTO);
             return tableDTO;
         }
 

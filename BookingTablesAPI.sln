@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTables.Tests", "Book
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTables.Models", "BookingTables.Models\BookingTables.Models.csproj", "{60933BA4-85FD-427C-8054-29389F5E0728}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingTables.IntegrationTests", "BookingTables.IntegrationTests\BookingTables.IntegrationTests.csproj", "{4D9D7894-8521-408C-92D6-90659F5E9A66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookingTables.Integration", "BookingTables.IntegrationTests\BookingTables.Integration.csproj", "{4D9D7894-8521-408C-92D6-90659F5E9A66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
