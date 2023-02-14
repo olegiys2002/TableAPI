@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Models.Models;
 using MassTransit;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+using Firebase.Auth;
+using IdentityModel;
 
 namespace Tests.Services
 {
@@ -20,6 +23,13 @@ namespace Tests.Services
         private readonly Mock<IPublishEndpoint> _publishEndpoint = new Mock<IPublishEndpoint>();
         private readonly Mock<ILogger<OrderService>> _logger = new Mock<ILogger<OrderService>>();
 
+        private readonly ClaimsPrincipal user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
+        {
+            new Claim(JwtClaimTypes.Name, "oleg"),
+            new Claim(JwtClaimTypes.Subject, "1"),
+            new Claim(JwtClaimTypes.Email, "oa6092698@gmail.com"),
+        }, "jwt"));
+
         private readonly List<int> _tableDTOs = new List<int>
         {
             0,
@@ -27,23 +37,27 @@ namespace Tests.Services
             2
         };
         private readonly List<Table> _tables = new();
+
         [Fact]
         public async Task OrderService_CreateOrder_Return()
         {
             var orderForCreation = GetOrderFormDTO();
             var order = GetTestOrder();
             var orderDTO = new OrderDTO();
+      
+            HttpContext httpContext = new DefaultHttpContext() { User = user };
 
+            _http.Setup(http => http.HttpContext).Returns(httpContext);
 
             _mapper.Setup(map => map.Map<Order>(orderForCreation)).Returns(order);
             _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
-
+            
             var quary = order.Table.AsAsyncQueryable();
 
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
             _unitOfWork.Setup(rep => rep.OrderRepository.Create(order));
             var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object,_logger.Object);
-
+           
             var createdOrder = await orderService.CreateOrderAsync(orderForCreation);
 
             Assert.NotNull(createdOrder);
@@ -81,6 +95,7 @@ namespace Tests.Services
             _mapper.Setup(map => map.Map<OrderDTO>(order)).Returns(orderDTO);
 
             _unitOfWork.Setup(rep => rep.TableRepository.GetTablesByIdsAsync(orderForCreation.TablesId, true)).Returns(Task.FromResult(order.Table));
+            _unitOfWork.Setup(rep => rep.OrderRepository.Create(order));
 
             var orderService = new OrderService(_mapper.Object, _unitOfWork.Object, _http.Object, _publishEndpoint.Object, _logger.Object);
 
@@ -227,6 +242,7 @@ namespace Tests.Services
 
             };
             var tables = new List<Table>();
+
             var table = new Table()
             {
                 CountOfSeats = 3,
