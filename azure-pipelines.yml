@@ -1,9 +1,11 @@
 name : Docker-CI
-trigger:
-  branches:
-    include:
-      - master
- 
+trigger: none
+
+resources:
+ pipelines:
+   - pipeline: CI
+     source: TablesCI
+     trigger: true
 pool:
   vmImage: 'ubuntu-latest'
 
